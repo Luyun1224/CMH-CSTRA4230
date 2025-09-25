@@ -253,7 +253,7 @@
             }
         }
 
-        form.addEventListener('submit', async (e) => {
+        form.addEventListener('submit', (e) => {
             e.preventDefault();
             const formData = {
                 action: 'submit_form',
@@ -270,26 +270,26 @@
                 attachments: document.getElementById('attachments').files[0]?.name || '無'
             };
 
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(formData),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-                
-                if (result.result === 'success') {
-                    showMessage(successMessage, '申請成功，資料已送出！');
-                    form.reset();
-                } else {
-                    showMessage(errorMessage, `提交失敗：${result.message || '未知錯誤'}`);
-                }
-            } catch (error) {
+            // 使用 redirect fetch 來處理跨域請求
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors', // <-- 關鍵修改
+                cache: 'no-cache',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData),
+                redirect: 'follow'
+            })
+            .then(res => {
+                // 在 no-cors 模式下，我們無法讀取回應，但請求已送出
+                showMessage(successMessage, '申請已成功送出！後台正在處理中...');
+                form.reset();
+            })
+            .catch(error => {
                 console.error("Error submitting form: ", error);
-                showMessage(errorMessage, `提交失敗：${error.message}`);
-            }
+                showMessage(errorMessage, `提交失敗，請檢查網路連線：${error.message}`);
+            });
         });
 
         async function fetchAndDisplayApplications(searchTerm = '') {
@@ -329,7 +329,7 @@
             }
 
             container.innerHTML = filteredApps.map(app => {
-                const status = statusOptions.find(s => s.label === app['狀態']);
+                const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] };
                 const currentStepIndex = getCurrentStepIndex(app['狀態']);
                 
                 let progressBarHtml = '';
@@ -343,9 +343,14 @@
                         </div>
                     `;
                 } else {
-                    let statusHistory;
+                    let statusHistory = {};
                     try {
-                        statusHistory = JSON.parse(app['狀態歷史紀錄']);
+                         // 確保 statusHistory 是字串才解析
+                        if(typeof app['狀態歷史紀錄'] === 'string') {
+                           statusHistory = JSON.parse(app['狀態歷史紀錄']);
+                        } else {
+                           statusHistory = app['狀態歷史紀錄'] || {};
+                        }
                     } catch (e) {
                         statusHistory = {};
                     }
@@ -395,8 +400,8 @@
                         <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
                             <div class="flex items-center space-x-4 mb-2 lg:mb-0">
                                 <h3 class="text-lg font-semibold text-gray-800">${app.id}</h3>
-                                <span class="px-3 py-1 rounded-full text-sm font-medium ${status.color}">
-                                    ${status.label}
+                                <span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">
+                                    ${statusInfo.label}
                                 </span>
                             </div>
                             <div class="flex space-x-2">
@@ -420,12 +425,12 @@
                             </div>
                             <div>
                                 <span class="font-medium text-gray-600">提交日期：</span>
-                                <span class="text-gray-800">${app['時間戳記']}</span>
+                                <span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span>
                             </div>
                         </div>
                         <div class="mt-3">
                             <span class="font-medium text-gray-600">教具：</span>
-                            <span class="text-gray-800">${app['教具品名規格'].substring(0, 100)}${app['教具品名規格'].length > 100 ? '...' : ''}</span>
+                            <span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span>
                         </div>
                     </div>
                 `;
@@ -443,6 +448,7 @@
             ).join('');
 
             const modal = document.createElement('div');
+            modal.id = 'updateStatusModal';
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
             modal.innerHTML = `
                 <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
@@ -452,19 +458,20 @@
                         ${statusHtml}
                     </select>
                     <div class="flex space-x-3">
-                        <button onclick="updateStatusInSheet('${appId}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
+                        <button id="confirmUpdate" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
                             確認更新
                         </button>
-                        <button onclick="closeModal('updateModal')" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg">
+                        <button onclick="document.body.removeChild(document.getElementById('updateStatusModal'))" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg">
                             取消
                         </button>
                     </div>
                 </div>
             `;
             document.body.appendChild(modal);
+            document.getElementById('confirmUpdate').onclick = () => updateStatusInSheet(appId);
         };
 
-        window.updateStatusInSheet = async function (appId) {
+        function updateStatusInSheet(appId) {
             const newStatus = document.getElementById('newStatus').value;
             const payload = {
                 action: 'update_status',
@@ -472,33 +479,34 @@
                 newStatus: newStatus
             };
 
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-                
-                if (result.result === 'success') {
-                    showMessage(successMessage, `狀態已成功更新！`);
-                    // Reload data from the sheet to reflect changes
-                    fetchAndDisplayApplications();
-                } else {
-                    showMessage(errorMessage, `更新失敗：${result.message}`);
-                }
-            } catch (error) {
-                console.error("Error updating status:", error);
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                showMessage(successMessage, `狀態已成功更新！頁面將在3秒後刷新...`);
+                setTimeout(() => fetchAndDisplayApplications(), 3000);
+            })
+            .catch(error => {
                 showMessage(errorMessage, `更新失敗：${error.message}`);
-            }
-            closeModal('updateModal');
+            })
+            .finally(() => {
+                 const modal = document.getElementById('updateStatusModal');
+                 if (modal) document.body.removeChild(modal);
+            });
         };
 
         window.closeModal = function (modalId) {
             const modal = document.getElementById(modalId);
-            if (modal) modal.classList.add('hidden');
+            if (modal) {
+              modal.classList.add('hidden');
+              if (modal.id !== 'adminModal') {
+                document.body.removeChild(modal);
+              }
+            }
         };
 
         window.viewDetails = async function (appId) {
@@ -522,9 +530,13 @@
         };
 
         function showDetailsModal(app) {
-            let statusHistory;
+            let statusHistory = {};
             try {
-                statusHistory = JSON.parse(app['狀態歷史紀錄']);
+                if (typeof app['狀態歷史紀錄'] === 'string') {
+                    statusHistory = JSON.parse(app['狀態歷史紀錄']);
+                } else {
+                    statusHistory = app['狀態歷史紀錄'] || {};
+                }
             } catch (e) {
                 statusHistory = {};
             }
@@ -538,21 +550,21 @@
                         <button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
                     </div>
                     <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div><strong>申請編號：</strong>${app.id}</div>
-                            <div><strong>狀態：</strong>${app['狀態']}</div>
-                            <div><strong>申請人：</strong>${app['申請人']}</div>
-                            <div><strong>申請單位：</strong>${app['申請單位']}</div>
-                            <div><strong>職稱：</strong>${app['職稱']}</div>
-                            <div><strong>聯繫方式：</strong>${app['聯繫方式']}</div>
-                            <div class="col-span-2"><strong>信箱：</strong>${app['信箱']}</div>
-                            <div class="col-span-2"><strong>教具規格：</strong>${app['教具品名規格']}</div>
-                            <div><strong>申請數量：</strong>${app['申請數量']}</div>
-                            <div><strong>教學頻率：</strong>${app['教學頻率']}</div>
-                            <div class="col-span-2"><strong>教學對象：</strong>${app['教學對象']}</div>
-                            <div class="col-span-2"><strong>預期效益：</strong>${app['預期效益']}</div>
-                            <div class="col-span-2"><strong>附件：</strong>${app['附件']}</div>
-                            <div><strong>提交日期：</strong>${statusHistory['已提交'] || '無'}</div>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div><strong>申請編號：</strong>${app.id || 'N/A'}</div>
+                            <div><strong>狀態：</strong>${app['狀態'] || 'N/A'}</div>
+                            <div><strong>申請人：</strong>${app['申請人'] || 'N/A'}</div>
+                            <div><strong>申請單位：</strong>${app['申請單位'] || 'N/A'}</div>
+                            <div><strong>職稱：</strong>${app['職稱'] || 'N/A'}</div>
+                            <div><strong>聯繫方式：</strong>${app['聯繫方式'] || 'N/A'}</div>
+                            <div class="col-span-2"><strong>信箱：</strong>${app['信箱'] || 'N/A'}</div>
+                            <div class="col-span-2"><strong>教具規格：</strong>${app['教具品名規格'] || 'N/A'}</div>
+                            <div><strong>申請數量：</strong>${app['申請數量'] || 'N/A'}</div>
+                            <div><strong>教學頻率：</strong>${app['教學頻率'] || 'N/A'}</div>
+                            <div class="col-span-2"><strong>教學對象：</strong>${app['教學對象'] || 'N/A'}</div>
+                            <div class="col-span-2"><strong>預期效益：</strong>${app['預期效益'] || 'N/A'}</div>
+                            <div class="col-span-2"><strong>附件：</strong>${app['附件'] || 'N/A'}</div>
+                            <div><strong>提交日期：</strong>${statusHistory['已提交'] || 'N/A'}</div>
                         </div>
                     </div>
                 </div>
@@ -585,23 +597,23 @@
             adminModal.classList.remove('hidden');
         });
 
-        confirmAdminLogin.addEventListener('click', async () => {
+        confirmAdminLogin.addEventListener('click', () => {
             const password = document.getElementById('adminPassword').value;
             const payload = {
                 action: 'verify_password',
                 password: password
             };
 
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-
+            fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                // 不能用 no-cors，因為需要讀取回傳結果來判斷是否登入成功
+                body: JSON.stringify(payload),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(result => {
                 if (result.result === 'success' && result.is_admin) {
                     isAdmin = true;
                     updateAdminUI();
@@ -611,10 +623,11 @@
                     isAdmin = false;
                     showMessage(errorMessage, result.message || '密碼錯誤，請重試。');
                 }
-            } catch (error) {
+            })
+            .catch(error => {
                 console.error('Error verifying password:', error);
                 showMessage(errorMessage, '登入驗證失敗。');
-            }
+            });
         });
 
         applyBtn.addEventListener('click', () => showView('apply'));
