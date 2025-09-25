@@ -172,7 +172,7 @@
         </div>
     </div>
     <script>
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ2s8klylZb1Rpsx8i19ewh7w-Y2CU2vSfxsEPlGU1opJybHf8ZPr0kdps9rGzUOPP6A/exec';
+        const GOOGLE_APPS_SCRIPT_URL = '請貼上您重新部署後產生的新網址';
         
         const form = document.getElementById('equipmentForm');
         const applyBtn = document.getElementById('applyBtn');
@@ -191,6 +191,7 @@
         
         let currentView = 'apply';
         let isAdmin = false;
+        let allApplications = []; // <-- 優化：建立一個全域變數來快取所有申請資料
 
         const statusOptions = [
             { value: '已提交', label: '已提交', color: 'bg-blue-100 text-blue-800' },
@@ -223,13 +224,7 @@
 
         function getCurrentStepIndex(status) {
             if (status === '已駁回') return -1;
-            const stepMap = {
-                '已提交': 0,
-                '已收件': 1,
-                '審核中': 2,
-                '已核准': 2,
-                '已完成': 3
-            };
+            const stepMap = { '已提交': 0, '已收件': 1, '審核中': 2, '已核准': 2, '已完成': 3 };
             return stepMap[status] || 0;
         }
 
@@ -238,23 +233,27 @@
             if (view === 'apply') {
                 applicationForm.classList.remove('hidden');
                 statusView.classList.add('hidden');
-                applyBtn.classList.add('bg-blue-600');
-                applyBtn.classList.remove('bg-gray-400');
-                statusBtn.classList.add('bg-gray-400');
-                statusBtn.classList.remove('bg-green-600');
+                applyBtn.classList.add('bg-blue-600', 'text-white');
+                applyBtn.classList.remove('bg-gray-200', 'text-gray-700');
+                statusBtn.classList.add('bg-gray-200', 'text-gray-700');
+                statusBtn.classList.remove('bg-green-600', 'text-white');
             } else {
                 applicationForm.classList.add('hidden');
                 statusView.classList.remove('hidden');
-                applyBtn.classList.add('bg-gray-400');
-                applyBtn.classList.remove('bg-blue-600');
-                statusBtn.classList.add('bg-green-600');
-                statusBtn.classList.remove('bg-gray-400');
+                applyBtn.classList.add('bg-gray-200', 'text-gray-700');
+                applyBtn.classList.remove('bg-blue-600', 'text-white');
+                statusBtn.classList.add('bg-green-600', 'text-white');
+                statusBtn.classList.remove('bg-gray-200', 'text-gray-700');
                 fetchAndDisplayApplications();
             }
         }
 
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            const submitButton = e.target.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            submitButton.textContent = '提交中...';
+
             const formData = {
                 action: 'submit_form',
                 department: document.getElementById('department').value,
@@ -270,25 +269,25 @@
                 attachments: document.getElementById('attachments').files[0]?.name || '無'
             };
 
-            // 使用 redirect fetch 來處理跨域請求
             fetch(GOOGLE_APPS_SCRIPT_URL, {
                 method: 'POST',
-                mode: 'no-cors', // <-- 關鍵修改
+                mode: 'no-cors',
                 cache: 'no-cache',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
                 redirect: 'follow'
             })
-            .then(res => {
-                // 在 no-cors 模式下，我們無法讀取回應，但請求已送出
+            .then(() => {
                 showMessage(successMessage, '申請已成功送出！後台正在處理中...');
                 form.reset();
             })
             .catch(error => {
                 console.error("Error submitting form: ", error);
                 showMessage(errorMessage, `提交失敗，請檢查網路連線：${error.message}`);
+            })
+            .finally(() => {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '🚀 提交申請';
             });
         });
 
@@ -297,7 +296,8 @@
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
                 const result = await response.json();
                 if (result.result === 'success') {
-                    displayApplications(result.data, searchTerm);
+                    allApplications = result.data; // <-- 優化：將資料存入快取
+                    displayApplications(searchTerm); // <-- 修改：直接使用快取資料來顯示
                 } else {
                     showMessage(errorMessage, `無法加載申請資料：${result.message}`);
                 }
@@ -307,274 +307,121 @@
             }
         }
 
-        function displayApplications(applications, searchTerm = '') {
+        function displayApplications(searchTerm = '') {
             const container = document.getElementById('applicationsList');
-            let filteredApps = applications;
+            let filteredApps = allApplications; // <-- 優化：從快取讀取資料
 
             if (searchTerm) {
-                filteredApps = applications.filter(app => 
-                    (app['申請人'] && app['申請人'].toLowerCase().includes(searchTerm.toLowerCase())) ||
-                    (app['教具品名規格'] && app['教具品名規格'].toLowerCase().includes(searchTerm.toLowerCase()))
+                const lowerCaseSearchTerm = searchTerm.toLowerCase();
+                filteredApps = allApplications.filter(app => 
+                    (app['申請人'] && String(app['申請人']).toLowerCase().includes(lowerCaseSearchTerm)) ||
+                    (app['教具品名規格'] && String(app['教具品名規格']).toLowerCase().includes(lowerCaseSearchTerm))
                 );
             }
 
-            if (filteredApps.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-12 text-gray-500">
-                        <div class="text-6xl mb-4">📋</div>
-                        <p class="text-lg">目前沒有申請記錄</p>
-                    </div>
-                `;
+            if (!filteredApps || filteredApps.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-gray-500"><div class="text-6xl mb-4">📋</div><p class="text-lg">目前沒有符合條件的申請記錄</p></div>`;
                 return;
             }
 
             container.innerHTML = filteredApps.map(app => {
-                const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] };
+                const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] || '未知' };
                 const currentStepIndex = getCurrentStepIndex(app['狀態']);
                 
-                let progressBarHtml = '';
+                let progressBarHtml;
                 if (app['狀態'] === '已駁回') {
-                    progressBarHtml = `
-                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                            <div class="flex items-center text-red-600">
-                                <span class="text-2xl mr-3">❌</span>
-                                <span class="font-medium">申請已被駁回</span>
-                            </div>
-                        </div>
-                    `;
+                    progressBarHtml = `<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"><div class="flex items-center text-red-600"><span class="text-2xl mr-3">❌</span><span class="font-medium">申請已被駁回</span></div></div>`;
                 } else {
                     let statusHistory = {};
                     try {
-                         // 確保 statusHistory 是字串才解析
-                        if(typeof app['狀態歷史紀錄'] === 'string') {
+                        if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) {
                            statusHistory = JSON.parse(app['狀態歷史紀錄']);
                         } else {
                            statusHistory = app['狀態歷史紀錄'] || {};
                         }
-                    } catch (e) {
-                        statusHistory = {};
-                    }
+                    } catch (e) { /* ignore parse error */ }
                     
-                    progressBarHtml = `
-                        <div class="bg-gray-50 rounded-lg p-4 mb-4">
-                            <div class="flex items-center justify-between relative">
-                                ${progressSteps.map((step, index) => {
-                                    const isCompleted = index <= currentStepIndex;
-                                    const isCurrent = index === currentStepIndex;
-                                    const date = statusHistory[step.key] || '';
-                                    return `
-                                        <div class="flex flex-col items-center relative z-10 w-1/4">
-                                            <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${
-                                                isCompleted 
-                                                    ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') 
-                                                    : 'bg-gray-200 text-gray-400'
-                                                }">
-                                                ${step.icon}
-                                            </div>
-                                            <span class="text-sm font-medium text-center ${
-                                                isCompleted ? 'text-gray-800' : 'text-gray-400'
-                                                }">${step.label}</span>
-                                            <span class="text-xs text-gray-500 mt-1">${date}</span>
-                                            ${isCurrent ? '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}
-                                        </div>
-                                        ${index < progressSteps.length - 1 ? `
-                                            <div class="flex-1 h-1 mx-4 rounded-full ${
-                                                index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'
-                                            } transition-all duration-300"></div>
-                                        ` : ''}
-                                    `;
-                                }).join('')}
-                            </div>
-                        </div>
-                    `;
+                    progressBarHtml = `<div class="bg-gray-50 rounded-lg p-4 mb-4"><div class="flex items-center justify-between relative">${progressSteps.map((step, index) => {
+                        const isCompleted = index <= currentStepIndex;
+                        const isCurrent = index === currentStepIndex;
+                        const date = statusHistory[step.key] || '';
+                        return `<div class="flex flex-col items-center relative z-10 w-1/4"><div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'}">${step.icon}</div><span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span><span class="text-xs text-gray-500 mt-1">${date}</span>${isCurrent ? '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}</div>${index < progressSteps.length - 1 ? `<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`;
+                    }).join('')}</div></div>`;
                 }
                 
-                const updateBtnHtml = isAdmin ? `
-                    <button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                        更新狀態
-                    </button>
-                ` : '';
+                const updateBtnHtml = isAdmin ? `<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : '';
 
-                return `
-                    <div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 mb-2 lg:mb-0">
-                                <h3 class="text-lg font-semibold text-gray-800">${app.id}</h3>
-                                <span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">
-                                    ${statusInfo.label}
-                                </span>
-                            </div>
-                            <div class="flex space-x-2">
-                                ${updateBtnHtml}
-                                <button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">
-                                    查看詳情
-                                </button>
-                            </div>
-                        </div>
-                        
-                        ${progressBarHtml}
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                            <div>
-                                <span class="font-medium text-gray-600">申請人：</span>
-                                <span class="text-gray-800">${app['申請人']}</span>
-                            </div>
-                            <div>
-                                <span class="font-medium text-gray-600">申請單位：</span>
-                                <span class="text-gray-800">${app['申請單位']}</span>
-                            </div>
-                            <div>
-                                <span class="font-medium text-gray-600">提交日期：</span>
-                                <span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span>
-                            </div>
-                        </div>
-                        <div class="mt-3">
-                            <span class="font-medium text-gray-600">教具：</span>
-                            <span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span>
-                        </div>
-                    </div>
-                `;
+                return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"><div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4"><div class="flex items-center space-x-4 mb-2 lg:mb-0"><h3 class="text-lg font-semibold text-gray-800">${app.id}</h3><span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span></div><div class="flex space-x-2">${updateBtnHtml}<button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button></div></div>${progressBarHtml}<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"><div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人']}</span></div><div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位']}</span></div><div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div></div><div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span></div></div>`;
             }).join('');
         }
-
-        window.changeStatus = function (appId, currentStatus) {
-            if (!isAdmin) {
-                showMessage(errorMessage, "您沒有權限執行此操作。");
+        
+        // <-- 優化：`viewDetails` 不再需要網路請求，變得超快
+        window.viewDetails = function (appId) {
+            if (!allApplications || allApplications.length === 0) {
+                showMessage(errorMessage, '資料尚未載入，請稍後再試。');
+                fetchAndDisplayApplications(); // 嘗試重新獲取
                 return;
             }
+            const app = allApplications.find(a => a.id === appId);
+            if (!app) {
+                showMessage(errorMessage, `在快取中找不到申請編號：${appId}`);
+                return;
+            }
+            showDetailsModal(app);
+        };
 
-            const statusHtml = statusOptions.map(status => 
-                `<option value="${status.value}" ${currentStatus === status.value ? 'selected' : ''}>${status.label}</option>`
-            ).join('');
-
+        window.changeStatus = function (appId, currentStatus) {
+            if (!isAdmin) return;
+            const statusHtml = statusOptions.map(s => `<option value="${s.value}" ${currentStatus === s.value ? 'selected' : ''}>${s.label}</option>`).join('');
             const modal = document.createElement('div');
             modal.id = 'updateStatusModal';
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50';
-            modal.innerHTML = `
-                <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-                    <h3 class="text-lg font-semibold mb-4">更新申請狀態</h3>
-                    <p class="text-gray-600 mb-4">申請編號：${appId}</p>
-                    <select id="newStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4">
-                        ${statusHtml}
-                    </select>
-                    <div class="flex space-x-3">
-                        <button id="confirmUpdate" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">
-                            確認更新
-                        </button>
-                        <button onclick="document.body.removeChild(document.getElementById('updateStatusModal'))" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg">
-                            取消
-                        </button>
-                    </div>
-                </div>
-            `;
+            modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-md w-full mx-4"><h3 class="text-lg font-semibold mb-4">更新申請狀態</h3><p class="text-gray-600 mb-4">申請編號：${appId}</p><select id="newStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg mb-4">${statusHtml}</select><div class="flex space-x-3"><button id="confirmUpdate" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">確認更新</button><button onclick="closeModal('updateStatusModal')" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg">取消</button></div></div>`;
             document.body.appendChild(modal);
             document.getElementById('confirmUpdate').onclick = () => updateStatusInSheet(appId);
         };
 
         function updateStatusInSheet(appId) {
             const newStatus = document.getElementById('newStatus').value;
-            const payload = {
-                action: 'update_status',
-                id: appId,
-                newStatus: newStatus
-            };
-
-            fetch(GOOGLE_APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                cache: 'no-cache',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
+            const payload = { action: 'update_status', id: appId, newStatus: newStatus };
+            fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'POST', mode: 'no-cors', cache: 'no-cache', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
             .then(() => {
-                showMessage(successMessage, `狀態已成功更新！頁面將在3秒後刷新...`);
-                setTimeout(() => fetchAndDisplayApplications(), 3000);
+                showMessage(successMessage, '狀態更新請求已送出！頁面將在3秒後刷新...');
+                setTimeout(() => fetchAndDisplayApplications(), 3000); // 重新獲取資料以更新快取
             })
-            .catch(error => {
-                showMessage(errorMessage, `更新失敗：${error.message}`);
-            })
-            .finally(() => {
-                 const modal = document.getElementById('updateStatusModal');
-                 if (modal) document.body.removeChild(modal);
-            });
+            .catch(error => showMessage(errorMessage, `更新失敗：${error.message}`))
+            .finally(() => closeModal('updateStatusModal'));
         };
 
-        window.closeModal = function (modalId) {
+        function closeModal(modalId) {
             const modal = document.getElementById(modalId);
             if (modal) {
-              modal.classList.add('hidden');
-              if (modal.id !== 'adminModal') {
-                document.body.removeChild(modal);
-              }
-            }
-        };
-
-        window.viewDetails = async function (appId) {
-            try {
-                const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
-                const result = await response.json();
-                if (result.result !== 'success') {
-                    showMessage(errorMessage, `無法加載詳情：${result.message}`);
-                    return;
+                if (modal.id === 'adminModal') {
+                    modal.classList.add('hidden');
+                } else {
+                    modal.remove();
                 }
-                const app = result.data.find(a => a.id === appId);
-                if (!app) {
-                    showMessage(errorMessage, `找不到申請編號：${appId}`);
-                    return;
-                }
-                showDetailsModal(app);
-            } catch (error) {
-                console.error("Error fetching details:", error);
-                showMessage(errorMessage, '無法加載詳情。');
             }
-        };
+        }
 
         function showDetailsModal(app) {
             let statusHistory = {};
             try {
-                if (typeof app['狀態歷史紀錄'] === 'string') {
+                if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) {
                     statusHistory = JSON.parse(app['狀態歷史紀錄']);
-                } else {
-                    statusHistory = app['狀態歷史紀錄'] || {};
                 }
-            } catch (e) {
-                statusHistory = {};
-            }
+            } catch (e) { /* ignore */ }
             const modal = document.createElement('div');
             modal.id = 'detailsModal';
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `
-                <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-semibold">申請詳情</h3>
-                        <button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-                    </div>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4 text-sm">
-                            <div><strong>申請編號：</strong>${app.id || 'N/A'}</div>
-                            <div><strong>狀態：</strong>${app['狀態'] || 'N/A'}</div>
-                            <div><strong>申請人：</strong>${app['申請人'] || 'N/A'}</div>
-                            <div><strong>申請單位：</strong>${app['申請單位'] || 'N/A'}</div>
-                            <div><strong>職稱：</strong>${app['職稱'] || 'N/A'}</div>
-                            <div><strong>聯繫方式：</strong>${app['聯繫方式'] || 'N/A'}</div>
-                            <div class="col-span-2"><strong>信箱：</strong>${app['信箱'] || 'N/A'}</div>
-                            <div class="col-span-2"><strong>教具規格：</strong>${app['教具品名規格'] || 'N/A'}</div>
-                            <div><strong>申請數量：</strong>${app['申請數量'] || 'N/A'}</div>
-                            <div><strong>教學頻率：</strong>${app['教學頻率'] || 'N/A'}</div>
-                            <div class="col-span-2"><strong>教學對象：</strong>${app['教學對象'] || 'N/A'}</div>
-                            <div class="col-span-2"><strong>預期效益：</strong>${app['預期效益'] || 'N/A'}</div>
-                            <div class="col-span-2"><strong>附件：</strong>${app['附件'] || 'N/A'}</div>
-                            <div><strong>提交日期：</strong>${statusHistory['已提交'] || 'N/A'}</div>
-                        </div>
-                    </div>
-                </div>
-            `;
+            modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">申請詳情</h3><button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button></div><div class="space-y-4"><div class="grid grid-cols-2 gap-4 text-sm"><div><strong>申請編號：</strong>${app.id || 'N/A'}</div><div><strong>狀態：</strong>${app['狀態'] || 'N/A'}</div><div><strong>申請人：</strong>${app['申請人'] || 'N/A'}</div><div><strong>申請單位：</strong>${app['申請單位'] || 'N/A'}</div><div><strong>職稱：</strong>${app['職稱'] || 'N/A'}</div><div><strong>聯繫方式：</strong>${app['聯繫方式'] || 'N/A'}</div><div class="col-span-2"><strong>信箱：</strong>${app['信箱'] || 'N/A'}</div><div class="col-span-2"><strong>教具規格：</strong><pre class="whitespace-pre-wrap font-sans">${app['教具品名規格'] || 'N/A'}</pre></div><div><strong>申請數量：</strong>${app['申請數量'] || 'N/A'}</div><div><strong>教學頻率：</strong>${app['教學頻率'] || 'N/A'}</div><div class="col-span-2"><strong>教學對象：</strong>${app['教學對象'] || 'N/A'}</div><div class="col-span-2"><strong>預期效益：</strong><pre class="whitespace-pre-wrap font-sans">${app['預期效益'] || 'N/A'}</pre></div><div class="col-span-2"><strong>附件：</strong>${app['附件'] || 'N/A'}</div><div><strong>提交日期：</strong>${statusHistory['已提交'] || 'N/A'}</div></div></div></div>`;
+            modal.onclick = () => closeModal('detailsModal');
             document.body.appendChild(modal);
         }
 
         searchBtn.addEventListener('click', () => {
             const searchTerm = searchInput.value;
-            fetchAndDisplayApplications(searchTerm);
+            displayApplications(searchTerm); // <-- 優化：直接從快取搜尋，不需網路請求
         });
 
         searchInput.addEventListener('keypress', (e) => {
@@ -599,20 +446,26 @@
 
         confirmAdminLogin.addEventListener('click', () => {
             const password = document.getElementById('adminPassword').value;
-            const payload = {
-                action: 'verify_password',
-                password: password
-            };
+            const payload = { action: 'verify_password', password: password };
 
             fetch(GOOGLE_APPS_SCRIPT_URL, {
                 method: 'POST',
-                // 不能用 no-cors，因為需要讀取回傳結果來判斷是否登入成功
                 body: JSON.stringify(payload),
-                headers: {
-                    'Content-Type': 'application/json'
+                headers: { 'Content-Type': 'application/json' },
+                // Google Apps Script doesn't need redirect:'follow' for this simple POST
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok.');
+                }
+                // Handle potential text/html redirect response from Google
+                const contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    return response.json();
+                } else {
+                    return response.text().then(text => { throw new Error("Received non-JSON response: " + text); });
                 }
             })
-            .then(response => response.json())
             .then(result => {
                 if (result.result === 'success' && result.is_admin) {
                     isAdmin = true;
@@ -626,7 +479,7 @@
             })
             .catch(error => {
                 console.error('Error verifying password:', error);
-                showMessage(errorMessage, '登入驗證失敗。');
+                showMessage(errorMessage, `登入驗證失敗: ${error.message}`);
             });
         });
 
@@ -636,3 +489,4 @@
     </script>
 </body>
 </html>
+
