@@ -89,7 +89,7 @@
                      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">教具品名規格 *</label>
-                             <textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具の品名、型號、規格等"></textarea>
+                             <textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具的品名、型號、規格等"></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">申請數量 *</label>
@@ -134,16 +134,15 @@
             
             <div id="statistics" class="mb-6 bg-blue-50 border border-blue-200 p-4 rounded-lg flex items-center justify-center space-x-8 text-center">
                 <div>
-                    <p class="text-sm text-gray-600">年度</p>
-                    <p id="statsYear" class="text-2xl font-bold text-blue-700">-</p>
+                    <label for="yearFilter" class="text-sm text-gray-600">篩選年度</label>
+                    <select id="yearFilter" class="mt-1 block w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md font-bold text-blue-700"></select>
                 </div>
                 <div class="border-l border-gray-300 h-12"></div>
                 <div>
-                    <p class="text-sm text-gray-600">年度申請總件數</p>
+                    <p class="text-sm text-gray-600">顯示件數</p>
                     <p id="statsCount" class="text-2xl font-bold text-blue-700">-</p>
                 </div>
             </div>
-
             <div class="mb-6">
                 <div class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="searchInput" placeholder="搜尋申請人或教具名稱..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -213,10 +212,10 @@
     const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
     const eyeOpen = document.getElementById('eye-open');
     const eyeClosed = document.getElementById('eye-closed');
-    // =======================【新增的 JS 變數】=======================
-    const statsYear = document.getElementById('statsYear');
+    // =======================【新增/修改的 JS 變數】=======================
+    const yearFilter = document.getElementById('yearFilter');
     const statsCount = document.getElementById('statsCount');
-    // ===============================================================
+    // ===================================================================
 
     let currentView = 'apply';
     let isAdmin = false;
@@ -251,7 +250,10 @@
             statusView.classList.remove('hidden');
             applyBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
             statusBtn.className = 'bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
-            fetchAndDisplayApplications();
+            // 只有在還沒有資料時才重新獲取
+            if(allApplications.length === 0) {
+                fetchAndDisplayApplications();
+            }
         }
     }
 
@@ -282,24 +284,17 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => {
-                    throw new Error(`伺服器錯誤: ${response.status} ${response.statusText} - ${text}`);
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(result => {
             if (result.result === 'success') {
-                showMessage(successMessage, '申請已成功送出！資料已寫入 Sheet。');
+                showMessage(successMessage, '申請已成功送出！');
                 form.reset();
+                allApplications = []; // 清空快取，下次查看時會重新載入
             } else {
                 throw new Error(result.message || '後端回報未知錯誤');
             }
         })
         .catch(error => {
-            console.error("Error submitting form: ", error);
             showMessage(errorMessage, `提交失敗：${error.message}`);
         })
         .finally(() => {
@@ -307,130 +302,137 @@
             submitButton.innerHTML = '🚀 提交申請';
         });
     });
-
+    
     // =======================【新增的 JS 函式】=======================
     /**
-     * 更新統計數據顯示
+     * 動態填入年份篩選器的選項
      */
-    function updateStatistics() {
-        const currentYear = new Date().getFullYear();
-        if (allApplications && allApplications.length > 0) {
-            const countForYear = allApplications.filter(app => {
-                const appDate = new Date(app['時間戳記']);
-                return appDate.getFullYear() === currentYear;
-            }).length;
+    function populateYearFilter() {
+        if (!allApplications || allApplications.length === 0) {
+            yearFilter.innerHTML = `<option value="${new Date().getFullYear()}">${new Date().getFullYear()}</option>`;
+            return;
+        }
 
-            statsYear.textContent = currentYear;
-            statsCount.textContent = `${countForYear} 件`;
-        } else {
-            statsYear.textContent = currentYear;
-            statsCount.textContent = '0 件';
+        const years = [...new Set(allApplications.map(app => new Date(app['時間戳記']).getFullYear()))];
+        years.sort((a, b) => b - a); // 年份由新到舊排序
+
+        // 記錄當前選擇的值，以便更新後恢復
+        const previouslySelected = yearFilter.value;
+
+        yearFilter.innerHTML = '<option value="all">所有年度</option>'; // 加入一個"所有年度"的選項
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
+
+        // 嘗試恢復之前的選擇
+        if (previouslySelected) {
+            yearFilter.value = previouslySelected;
         }
     }
     // ===============================================================
-
+    
     // =======================【修改的 JS 函式】=======================
     /**
-     * 獲取並顯示所有申請資料
-     * @param {string} searchTerm - 搜尋關鍵字
+     * 根據選擇的年份更新統計數據
      */
-    async function fetchAndDisplayApplications(searchTerm = '') {
+    function updateStatistics() {
+        const selectedYear = yearFilter.value;
+        const countLabel = statsCount.previousElementSibling;
+        let count = 0;
+
+        if (selectedYear === 'all') {
+            count = allApplications.length;
+            countLabel.textContent = '所有申請總件數';
+        } else {
+            const year = parseInt(selectedYear, 10);
+            count = allApplications.filter(app => new Date(app['時間戳記']).getFullYear() === year).length;
+            countLabel.textContent = '該年度申請件數';
+        }
+        statsCount.textContent = `${count} 件`;
+    }
+    // ===============================================================
+
+    async function fetchAndDisplayApplications() {
+        const listContainer = document.getElementById('applicationsList');
+        listContainer.innerHTML = `<div class="text-center py-12 text-gray-500">🔄 正在加載資料...</div>`;
+
         try {
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
             const result = await response.json();
             if (result.result === 'success') {
                 allApplications = result.data;
-                // 在顯示列表前，先更新統計數據
+                populateYearFilter();
+                displayApplications();
                 updateStatistics();
-                // 接著顯示申請列表
-                displayApplications(searchTerm);
             } else {
-                showMessage(errorMessage, `無法加載申請資料：${result.message}`);
+                throw new Error(result.message);
             }
         } catch (error) {
-            console.error("Error fetching data:", error);
-            showMessage(errorMessage, '無法加載申請資料，請確認後端部署設定是否正確。');
+            listContainer.innerHTML = `<div class="text-center py-12 text-red-500">❌ 無法加載申請資料：${error.message}</div>`;
         }
     }
-    // ===============================================================
 
-    function displayApplications(searchTerm = '') {
-        const container = document.getElementById('applicationsList');
-        let filteredApps = allApplications;
+    /**
+     * 顯示申請列表 (已更新，會同時處理年份篩選和關鍵字搜尋)
+     */
+    function displayApplications() {
+        const searchTerm = searchInput.value;
+        const selectedYear = yearFilter.value;
+        let appsToDisplay = allApplications;
 
+        // 1. 根據年份篩選
+        if (selectedYear !== 'all') {
+            const year = parseInt(selectedYear, 10);
+            appsToDisplay = appsToDisplay.filter(app => new Date(app['時間戳記']).getFullYear() === year);
+        }
+
+        // 2. 根據關鍵字搜尋
         if (searchTerm) {
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
-            filteredApps = allApplications.filter(app =>
+            appsToDisplay = appsToDisplay.filter(app => 
                 (app['申請人'] && String(app['申請人']).toLowerCase().includes(lowerCaseSearchTerm)) ||
                 (app['教具品名規格'] && String(app['教具品名規格']).toLowerCase().includes(lowerCaseSearchTerm))
             );
         }
-
-        if (!filteredApps || filteredApps.length === 0) {
+        
+        const container = document.getElementById('applicationsList');
+        if (!appsToDisplay || appsToDisplay.length === 0) {
             container.innerHTML = `<div class="text-center py-12 text-gray-500"><div class="text-6xl mb-4">📋</div><p class="text-lg">目前沒有符合條件的申請記錄</p></div>`;
             return;
         }
 
-        container.innerHTML = filteredApps.map(app => {
+        container.innerHTML = appsToDisplay.map(app => {
             const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] || '未知' };
-            
             const getCurrentStepIndex = (status) => {
-                switch (status) {
-                    case '已提交': return 0;
-                    case '已收件': return 1;
-                    case '審核中': return 2;
-                    case '已核准': return 2;
-                    case '已完成': return 3;
-                    default: return -1;
-                }
+                switch (status) { case '已提交': return 0; case '已收件': return 1; case '審核中': case '已核准': return 2; case '已完成': return 3; default: return -1; }
             };
             const currentStepIndex = getCurrentStepIndex(app['狀態']);
-            
             let progressBarHtml;
             if (app['狀態'] === '已駁回') {
                 progressBarHtml = `<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"><div class="flex items-center text-red-600"><span class="text-2xl mr-3">❌</span><span class="font-medium">申請已被駁回</span></div></div>`;
             } else {
                 let statusHistory = {};
-                try {
-                    if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) {
-                       statusHistory = JSON.parse(app['狀態歷史紀錄']);
-                    }
-                } catch (e) { /* ignore parse error */ }
-                
+                try { if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) { statusHistory = JSON.parse(app['狀態歷史紀錄']); } } catch (e) {}
                 progressBarHtml = `<div class="bg-gray-50 rounded-lg p-4 mb-4"><div class="flex items-center justify-between relative">${progressSteps.map((step, index) => {
-                    const isCompleted = index <= currentStepIndex;
-                    const isCurrent = index === currentStepIndex;
-                    const date = statusHistory[step.key] || '';
-                    return `<div class="flex flex-col items-center relative z-10 w-1/4"><div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'}">${step.icon}</div><span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span><span class="text-xs text-gray-500 mt-1">${date}</span>${isCurrent ?
-                    '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}</div>${index < progressSteps.length - 1 ?
-                    `<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`;
+                    const isCompleted = index <= currentStepIndex; const isCurrent = index === currentStepIndex; const date = statusHistory[step.key] || '';
+                    return `<div class="flex flex-col items-center relative z-10 w-1/4"><div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'}">${step.icon}</div><span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span><span class="text-xs text-gray-500 mt-1">${date}</span>${isCurrent ? '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}</div>${index < progressSteps.length - 1 ? `<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`;
                 }).join('')}</div></div>`;
             }
-            
-            const updateBtnHtml = isAdmin ?
-            `<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : '';
+            const updateBtnHtml = isAdmin ? `<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : '';
             return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"><div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4"><div class="flex items-center space-x-4 mb-2 lg:mb-0"><h3 class="text-lg font-semibold text-gray-800">${app.id}</h3><span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span></div><div class="flex space-x-2">${updateBtnHtml}<button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button></div></div>${progressBarHtml}<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"><div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人']}</span></div><div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位']}</span></div><div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div></div><div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span></div></div>`;
         }).join('');
     }
     
     // --- 彈出視窗 (Modal) 相關函式 ---
-    function closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.remove();
-        }
-    }
-
-    function closeAdminModal() {
-        if(adminModal) adminModal.classList.add('hidden');
-    }
+    function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.remove(); } }
+    function closeAdminModal() { if(adminModal) adminModal.classList.add('hidden'); }
 
     window.viewDetails = function (appId) {
         const app = allApplications.find(a => a.id === appId);
-        if (!app) {
-            showMessage(errorMessage, `在快取中找不到申請編號：${appId}`);
-            return;
-        }
+        if (!app) { showMessage(errorMessage, `在快取中找不到申請編號：${appId}`); return; }
         showDetailsModal(app);
     };
 
@@ -438,47 +440,43 @@
         const modal = document.createElement('div');
         modal.id = 'detailsModal';
         modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-        modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">申請詳情</h3><button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button></div><div class="space-y-4"><div class="grid grid-cols-2 gap-4 text-sm"><div><strong>申請編號：</strong>${app.id || 'N/A'}</div><div><strong>狀態：</strong>${app['狀態'] || 'N/A'}</div><div><strong>申請人：</strong>${app['申請人'] || 'N/A'}</div><div><strong>申請單位：</strong>${app['申請單位'] || 'N/A'}</div><div><strong>職稱：</strong>${app['職稱'] || 'N/A'}</div><div><strong>聯繫方式：</strong>${app['聯繫方式'] || 'N/A'}</div><div class="col-span-2"><strong>信箱：</strong>${app['信箱'] || 'N/A'}</div><div class="col-span-2"><strong>教具規格：</strong><pre class="whitespace-pre-wrap font-sans">${app['教具品名規格'] || 'N/A'}</pre></div><div><strong>申請數量：</strong>${app['申請數量'] || 'N/A'}</div><div><strong>教學頻率：</strong>${app['教學頻率'] || 'N/A'}</div><div class="col-span-2"><strong>教學對象：</strong>${app['教學對象'] || 'N/A'}</div><div class="col-span-2"><strong>預期效益：</strong><pre class="whitespace-pre-wrap font-sans">${app['預期效益'] || 'N/A'}</pre></div><div class="col-span-2"><strong>附件：</strong>${app['附件'] || 'N/A'}</div><div><strong>提交日期：</strong>${new Date(app['時間戳記']).toLocaleString() || 'N/A'}</div></div></div></div>`;
+        modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">申請詳情</h3><button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button></div><div class="space-y-4"><div class="grid grid-cols-2 gap-4 text-sm"><div><strong>申請編號：</strong>${app.id||'N/A'}</div><div><strong>狀態：</strong>${app['狀態']||'N/A'}</div><div><strong>申請人：</strong>${app['申請人']||'N/A'}</div><div><strong>申請單位：</strong>${app['申請單位']||'N/A'}</div><div><strong>職稱：</strong>${app['職稱']||'N/A'}</div><div><strong>聯繫方式：</strong>${app['聯繫方式']||'N/A'}</div><div class="col-span-2"><strong>信箱：</strong>${app['信箱']||'N/A'}</div><div class="col-span-2"><strong>教具規格：</strong><pre class="whitespace-pre-wrap font-sans">${app['教具品名規格']||'N/A'}</pre></div><div><strong>申請數量：</strong>${app['申請數量']||'N/A'}</div><div><strong>教學頻率：</strong>${app['教學頻率']||'N/A'}</div><div class="col-span-2"><strong>教學對象：</strong>${app['教學對象']||'N/A'}</div><div class="col-span-2"><strong>預期效益：</strong><pre class="whitespace-pre-wrap font-sans">${app['預期效益']||'N/A'}</pre></div><div class="col-span-2"><strong>附件：</strong>${app['附件']||'N/A'}</div><div><strong>提交日期：</strong>${new Date(app['時間戳記']).toLocaleString()||'N/A'}</div></div></div></div>`;
         modal.onclick = () => closeModal('detailsModal');
         document.body.appendChild(modal);
     }
 
-    window.changeStatus = function (appId, currentStatus) {
-        // Implementation for changing status
-    };
+    window.changeStatus = function (appId, currentStatus) { /* ... 內容省略 ... */ };
 
     // --- 事件監聽器設定 ---
     applyBtn.addEventListener('click', () => showView('apply'));
     statusBtn.addEventListener('click', () => showView('status'));
 
+    // =======================【修改的事件監聽】=======================
+    yearFilter.addEventListener('change', () => {
+        displayApplications();
+        updateStatistics();
+    });
     searchBtn.addEventListener('click', () => {
-        const searchTerm = searchInput.value;
-        displayApplications(searchTerm);
+        displayApplications();
+        updateStatistics(); // 搜尋後也更新件數統計
     });
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
-            searchBtn.click();
+            displayApplications();
+            updateStatistics(); // 搜尋後也更新件數統計
         }
     });
+    // ===============================================================
+
     adminLoginBtn.addEventListener('click', () => {
         adminModal.classList.remove('hidden');
         adminPasswordInput.focus();
     });
-
     document.querySelector('#adminModal button[onclick*="closeAdminModal"]').addEventListener('click', closeAdminModal);
-
-    confirmAdminLogin.addEventListener('click', () => {
-        // Implementation for admin login
-    });
-
-    togglePasswordVisibility.addEventListener('click', () => {
-        // Implementation for password visibility
-    });
+    confirmAdminLogin.addEventListener('click', () => { /* ... 內容省略 ... */ });
+    togglePasswordVisibility.addEventListener('click', () => { /* ... 內容省略 ... */ });
     adminPasswordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            confirmAdminLogin.click();
-        }
+        if (e.key === 'Enter') { e.preventDefault(); confirmAdminLogin.click(); }
     });
     
     function showMessage(element, message) {
