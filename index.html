@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -14,8 +13,10 @@
             animation: fadeIn 0.3s ease-in;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0;
+            transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0);
+        }
         }
         /* 隱藏密碼輸入框的顯示/隱藏按鈕的預設樣式 */
         input[type="password"]::-ms-reveal,
@@ -30,7 +31,7 @@
             <button id="adminLoginBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">管理者登入</button>
             <div id="admin-info" class="hidden">
                 <p class="font-bold text-gray-800">管理員</p>
-                <p id="adminStatusText" class="text-green-700 font-bold text-xs">已取得管理權限</p>
+                [cite_start]<p id="adminStatusText" class="text-green-700 font-bold text-xs">已取得管理權限</p> [cite: 66]
             </div>
         </div>
 
@@ -42,105 +43,107 @@
         <div class="flex justify-center mb-8 space-x-4">
             <button id="applyBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
                 📝 新增申請
-            </button>
+            [cite_start]</button> [cite: 67]
             <button id="statusBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors">
                 📊 查看狀態
             </button>
         </div>
 
-        <div id="applicationForm" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 mb-8">
+        
+        [cite_start]<div id="applicationForm" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 mb-8"> [cite: 68]
             <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">教具申請表</h2>
             
             <form id="equipmentForm">
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
                         👤 一、基本資料
-                    </h3>
+                    [cite_start]</h3> [cite: 69]
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">申請單位 *</label>
+                             [cite_start]<label class="block text-sm font-medium text-gray-700 mb-2">申請單位 *</label> [cite: 70]
                             <input type="text" id="department" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">申請人 *</label>
+                         <div>
+                            [cite_start]<label class="block text-sm font-medium text-gray-700 mb-2">申請人 *</label> [cite: 71]
                             <input type="text" id="applicant" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
+                         [cite_start]</div> [cite: 72]
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">職稱 *</label>
-                            <input type="text" id="position" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            [cite_start]<input type="text" id="position" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"> [cite: 73]
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">聯繫方式 *</label>
-                            <input type="tel" id="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                             [cite_start]<input type="tel" id="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"> [cite: 74]
                         </div>
                         <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">信箱 *</label>
+                             [cite_start]<label class="block text-sm font-medium text-gray-700 mb-2">信箱 *</label> [cite: 75]
                             <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                     </div>
-                </div>
+                 [cite_start]</div> [cite: 76]
 
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
                         🔧 二、教具資訊
                     </h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     [cite_start]<div class="grid grid-cols-1 md:grid-cols-2 gap-6"> [cite: 77]
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">教具品名規格 *</label>
-                            <textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具的品名、型號、規格等"></textarea>
+                             [cite_start]<textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具的品名、型號、規格等"></textarea> [cite: 78]
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">申請數量 *</label>
+                            [cite_start]<label class="block text-sm font-medium text-gray-700 mb-2">申請數量 *</label> [cite: 79]
                             <input type="number" id="quantity" required min="1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">教學頻率 *</label>
+                             [cite_start]<label class="block text-sm font-medium text-gray-700 mb-2">教學頻率 *</label> [cite: 80]
                             <select id="frequency" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">請選擇</option>
-                                <option value="每週">每週</option>
+                                 [cite_start]<option value="每週">每週</option> [cite: 81]
                                 <option value="每月">每月</option>
                                 <option value="每學期">每學期</option>
-                                <option value="不定期">不定期</option>
+                                 [cite_start]<option value="不定期">不定期</option> [cite: 82]
                             </select>
                         </div>
-                        <div class="md:col-span-2">
+                         [cite_start]<div class="md:col-span-2"> [cite: 83]
                             <label class="block text-sm font-medium text-gray-700 mb-2">預期效益 *</label>
                             <textarea id="expectedBenefit" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請說明使用此教具預期達到的教學效果"></textarea>
-                        </div>
+                         [cite_start]</div> [cite: 84]
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">教學對象 *</label>
-                            <input type="text" id="targetAudience" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例：國小三年級學生、成人學習者等">
+                            [cite_start]<input type="text" id="targetAudience" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例：國小三年級學生、成人學習者等"> [cite: 85]
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">檢附教學相關課程表或計劃書 (非必填)</label>
-                            <input type="file" id="attachments" accept=".pdf,.doc,.docx,.jpg,.png" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                             [cite_start]<input type="file" id="attachments" accept=".pdf,.doc,.docx,.jpg,.png" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"> [cite: 86]
                             <p class="text-sm text-gray-500 mt-1">支援格式：PDF, DOC, DOCX, JPG, PNG</p>
                         </div>
-                    </div>
+                     [cite_start]</div> [cite: 87]
                 </div>
 
                 <div class="flex justify-center">
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 active:scale-95 active:bg-blue-800">
                         🚀 提交申請
-                    </button>
+                    [cite_start]</button> [cite: 88]
                 </div>
             </form>
         </div>
 
         <div id="statusView" class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8 hidden">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">申請狀態查詢</h2>
-            
+             [cite_start][cite: 89]
             <div class="mb-6">
                 <div class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="searchInput" placeholder="搜尋申請人或教具名稱..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <button id="searchBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors active:scale-95 active:bg-blue-800">
-                        🔍 搜尋
-                    </button>
+                         🔍 搜尋
+                    [cite_start]</button> [cite: 90]
                 </div>
             </div>
 
             <div id="applicationsList" class="space-y-4">
-                </div>
+               
+            [cite_start]</div> [cite: 91]
         </div>
 
         <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg hidden fade-in">
@@ -151,93 +154,89 @@
             ❌ 發生錯誤！
         </div>
 
-        <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        [cite_start]<div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden"> [cite: 92]
             <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4 shadow-lg">
                 <h3 class="text-xl font-semibold mb-4">管理者登入</h3>
                 <div class="relative mb-4">
                     <input type="password" id="adminPassword" placeholder="請輸入密碼" class="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10">
-                    <button type="button" id="togglePasswordVisibility" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700">
+                     [cite_start]<button type="button" id="togglePasswordVisibility" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700"> [cite: 93]
                         <svg id="eye-open" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            [cite_start]<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /> [cite: 94]
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        <svg id="eye-closed" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        [cite_start]<svg id="eye-closed" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"> [cite: 95]
                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 .847 0 1.673.124 2.468.352M10.582 10.582a3 3 0 112.836 2.836M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.75 4.75l14.5 14.5" />
+                            [cite_start]<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.75 4.75l14.5 14.5" /> [cite: 96]
                         </svg>
                     </button>
                 </div>
                 <div class="flex space-x-3">
-                    <button id="confirmAdminLogin" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-blue-800">
+                   [cite_start]<button id="confirmAdminLogin" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-blue-800"> [cite: 97]
                         確認
                     </button>
-                    <button onclick="closeModal('adminModal')" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-gray-600">
-                        取消
-                    </button>
+                    <button onclick="closeAdminModal()" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-gray-600">
+                         取消
+                    [cite_start]</button> [cite: 98]
                 </div>
             </div>
         </div>
     </div>
     <script>
         // --- 全域變數與 DOM 元素 ---
-        const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ2s8klylZb1Rpsx8i19ewh7w-Y2CU2vSfxsEPlGU1opJybHf8ZPr0kdps9rGzUOPP6A/exec';
+        // 【請務必】將此處替換為您自己重新部署後的【新】GAS Web App URL
+        [cite_start]const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ2s8klylZb1Rpsx8i19ewh7w-Y2CU2vSfxsEPlGU1opJybHf8ZPr0kdps9rGzUOPP6A/exec'; [cite: 99]
         
         const form = document.getElementById('equipmentForm');
         const applyBtn = document.getElementById('applyBtn');
         const statusBtn = document.getElementById('statusBtn');
         const adminLoginBtn = document.getElementById('adminLoginBtn');
-        const confirmAdminLogin = document.getElementById('confirmAdminLogin');
+        [cite_start]const confirmAdminLogin = document.getElementById('confirmAdminLogin'); [cite: 100]
         const adminModal = document.getElementById('adminModal');
         const adminInfo = document.getElementById('admin-info');
         const adminPasswordInput = document.getElementById('adminPassword');
         const applicationForm = document.getElementById('applicationForm');
-        const statusView = document.getElementById('statusView');
+        [cite_start]const statusView = document.getElementById('statusView'); [cite: 101]
         const successMessage = document.getElementById('successMessage');
         const errorMessage = document.getElementById('errorMessage');
         const searchInput = document.getElementById('searchInput');
         const searchBtn = document.getElementById('searchBtn');
-        
-        // --- 優化：管理者登入體驗 ---
-        const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
+        [cite_start]const togglePasswordVisibility = document.getElementById('togglePasswordVisibility'); [cite: 102]
         const eyeOpen = document.getElementById('eye-open');
-        const eyeClosed = document.getElementById('eye-closed');
+        [cite_start]const eyeClosed = document.getElementById('eye-closed'); [cite: 103]
 
         let currentView = 'apply';
         let isAdmin = false;
         let allApplications = [];
-
-        // --- 設定與靜態資料 ---
+        [cite_start]// --- 設定與靜態資料 --- [cite: 104]
         const statusOptions = [
             { value: '已提交', label: '已提交', color: 'bg-blue-100 text-blue-800' },
             { value: '已收件', label: '已收件', color: 'bg-yellow-100 text-yellow-800' },
             { value: '審核中', label: '審核中', color: 'bg-orange-100 text-orange-800' },
             { value: '已核准', label: '已核准', color: 'bg-green-100 text-green-800' },
-            { value: '已駁回', label: '已駁回', color: 'bg-red-100 text-red-800' },
+             [cite_start]{ value: '已駁回', label: '已駁回', color: 'bg-red-100 text-red-800' }, [cite: 105]
             { value: '已完成', label: '已完成', color: 'bg-purple-100 text-purple-800' }
         ];
-
-        const progressSteps = [
+        [cite_start]const progressSteps = [ [cite: 106]
             { key: '已提交', label: '申請中', icon: '📝' },
             { key: '已收件', label: '中心收件', icon: '📨' },
             { key: '已核准', label: '請購中', icon: '🔍' },
             { key: '已完成', label: '已送達', icon: '✅' }
         ];
-
-        // --- 核心函式 ---
+        [cite_start]// --- 核心函式 --- [cite: 107]
 
         function showView(view) {
             currentView = view;
-            if (view === 'apply') {
+            [cite_start]if (view === 'apply') { [cite: 108]
                 applicationForm.classList.remove('hidden');
-                statusView.classList.add('hidden');
+                [cite_start]statusView.classList.add('hidden'); [cite: 109]
                 applyBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
-                statusBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
+                [cite_start]statusBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors'; [cite: 110]
             } else {
-                applicationForm.classList.add('hidden');
+                [cite_start]applicationForm.classList.add('hidden'); [cite: 111]
                 statusView.classList.remove('hidden');
-                applyBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
+                [cite_start]applyBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors'; [cite: 112]
                 statusBtn.className = 'bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
-                fetchAndDisplayApplications();
+                [cite_start]fetchAndDisplayApplications(); [cite: 113]
             }
         }
 
@@ -248,250 +247,277 @@
             submitButton.textContent = '提交中...';
 
             const formData = {
-                action: 'submit_form',
+                [cite_start]action: 'submit_form', [cite: 114]
                 department: document.getElementById('department').value,
                 applicant: document.getElementById('applicant').value,
                 position: document.getElementById('position').value,
                 contact: document.getElementById('contact').value,
                 email: document.getElementById('email').value,
-                equipmentSpec: document.getElementById('equipmentSpec').value,
+                [cite_start]equipmentSpec: document.getElementById('equipmentSpec').value, [cite: 115]
                 quantity: document.getElementById('quantity').value,
                 frequency: document.getElementById('frequency').value,
                 expectedBenefit: document.getElementById('expectedBenefit').value,
                 targetAudience: document.getElementById('targetAudience').value,
-                attachments: document.getElementById('attachments').files[0]?.name || '無'
+                attachments: document.getElementById('attachments').files[0]?.name || [cite_start]'無' [cite: 116]
             };
-
-            // =================== 這是新的、可偵錯的 fetch 程式碼 ===================
-            fetch(GOOGLE_APPS_SCRIPT_URL, {
+            
+            // ===================【程式碼修正】===================
+            // 修正：為 fetch 請求添加了 headers 屬性。
+            // 資安說明：'Content-Type': 'application/json' 標頭是告訴後端 GAS，
+            // 我們發送的是 JSON 格式的純文字，請它用 JSON 解析器來讀取。
+            // 如果沒有這個標頭，GAS 可能會解析失敗，導致後端無法正確讀取 action 等欄位。
+            [cite_start]fetch(GOOGLE_APPS_SCRIPT_URL, { [cite: 117]
                 method: 'POST',
                 cache: 'no-cache',
-                                body: JSON.stringify(formData)
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
             })
-            .then(response => {
+             [cite_start].then(response => { [cite: 118]
                 if (!response.ok) {
                     return response.text().then(text => {
                         throw new Error(`伺服器錯誤: ${response.status} ${response.statusText} - ${text}`);
-                    });
+                     [cite_start]}); [cite: 119]
                 }
                 return response.json();
             })
             .then(result => {
                 if (result.result === 'success') {
-                    showMessage(successMessage, '申請已成功送出！資料已寫入 Sheet。');
+                     [cite_start]showMessage(successMessage, '申請已成功送出！資料已寫入 Sheet。'); [cite: 120]
                     form.reset();
                 } else {
                     throw new Error(result.message || '後端回報未知錯誤');
                 }
             })
-            .catch(error => {
+             [cite_start].catch(error => { [cite: 121]
                 console.error("Error submitting form: ", error);
-                showMessage(errorMessage, `提交失敗：${error.message}`);
+                [cite_start]showMessage(errorMessage, `提交失敗：${error.message}`); [cite: 122]
             })
             .finally(() => {
                 submitButton.disabled = false;
                 submitButton.innerHTML = '🚀 提交申請';
             });
-            // =====================================================================
+            [cite_start]// ======================================================= [cite: 123]
         });
 
-        async function fetchAndDisplayApplications(searchTerm = '') {
+        [cite_start]async function fetchAndDisplayApplications(searchTerm = '') { [cite: 124]
             try {
                 const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
-                const result = await response.json();
+                [cite_start]const result = await response.json(); [cite: 125]
                 if (result.result === 'success') {
                     allApplications = result.data;
-                    displayApplications(searchTerm);
+                    [cite_start]displayApplications(searchTerm); [cite: 126]
                 } else {
-                    showMessage(errorMessage, `無法加載申請資料：${result.message}`);
+                    [cite_start]showMessage(errorMessage, `無法加載申請資料：${result.message}`); [cite: 127]
                 }
             } catch (error) {
                 console.error("Error fetching data:", error);
-                showMessage(errorMessage, '無法加載申請資料，請檢查後端日誌。');
+                // 當部署設定錯誤時，最常觸發這裡的錯誤
+                [cite_start]showMessage(errorMessage, '無法加載申請資料，請確認後端部署設定是否正確。'); [cite: 128]
             }
         }
 
         function displayApplications(searchTerm = '') {
             const container = document.getElementById('applicationsList');
-            let filteredApps = allApplications;
+            [cite_start]let filteredApps = allApplications; [cite: 129]
 
             if (searchTerm) {
                 const lowerCaseSearchTerm = searchTerm.toLowerCase();
-                filteredApps = allApplications.filter(app => 
+                [cite_start]filteredApps = allApplications.filter(app => [cite: 130]
                     (app['申請人'] && String(app['申請人']).toLowerCase().includes(lowerCaseSearchTerm)) ||
                     (app['教具品名規格'] && String(app['教具品名規格']).toLowerCase().includes(lowerCaseSearchTerm))
                 );
             }
 
-            if (!filteredApps || filteredApps.length === 0) {
+            [cite_start]if (!filteredApps || filteredApps.length === 0) { [cite: 131]
                 container.innerHTML = `<div class="text-center py-12 text-gray-500"><div class="text-6xl mb-4">📋</div><p class="text-lg">目前沒有符合條件的申請記錄</p></div>`;
-                return;
+                [cite_start]return; [cite: 132]
             }
 
             container.innerHTML = filteredApps.map(app => {
                 const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] || '未知' };
+                
+                // Helper function to determine progress step index
+                const getCurrentStepIndex = (status) => {
+                    switch (status) {
+                        case '已提交': return 0;
+                        case '已收件': return 1;
+                        case '審核中': return 2; // visually stays at step 2
+                        case '已核准': return 2;
+                        case '已完成': return 3;
+                        default: return -1;
+                    }
+                };
                 const currentStepIndex = getCurrentStepIndex(app['狀態']);
                 
-                let progressBarHtml;
+                 [cite_start]let progressBarHtml; [cite: 133]
                 if (app['狀態'] === '已駁回') {
                     progressBarHtml = `<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"><div class="flex items-center text-red-600"><span class="text-2xl mr-3">❌</span><span class="font-medium">申請已被駁回</span></div></div>`;
                 } else {
                     let statusHistory = {};
-                    try {
+                     [cite_start]try { [cite: 134]
                         if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) {
                            statusHistory = JSON.parse(app['狀態歷史紀錄']);
-                        }
+                        [cite_start]} [cite: 135]
                     } catch (e) { /* ignore parse error */ }
                     
                     progressBarHtml = `<div class="bg-gray-50 rounded-lg p-4 mb-4"><div class="flex items-center justify-between relative">${progressSteps.map((step, index) => {
-                        const isCompleted = index <= currentStepIndex;
+                         [cite_start]const isCompleted = index <= currentStepIndex; [cite: 136]
                         const isCurrent = index === currentStepIndex;
-                        const date = statusHistory[step.key] || '';
-                        return `<div class="flex flex-col items-center relative z-10 w-1/4"><div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'}">${step.icon}</div><span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span><span class="text-xs text-gray-500 mt-1">${date}</span>${isCurrent ? '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}</div>${index < progressSteps.length - 1 ? `<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`;
+                        const date = statusHistory[step.key] || [cite_start]''; [cite: 137]
+                        return `<div class="flex flex-col items-center relative z-10 w-1/4"><div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'}">${step.icon}</div><span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span><span class="text-xs text-gray-500 mt-1">${date}</span>${isCurrent ?
+                        [cite_start]'<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}</div>${index < progressSteps.length - 1 ? [cite: 138]
+                        [cite_start]`<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`; [cite: 139]
                     }).join('')}</div></div>`;
-                }
+                [cite_start]} [cite: 140]
                 
-                const updateBtnHtml = isAdmin ? `<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : '';
-
-                return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"><div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4"><div class="flex items-center space-x-4 mb-2 lg:mb-0"><h3 class="text-lg font-semibold text-gray-800">${app.id}</h3><span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span></div><div class="flex space-x-2">${updateBtnHtml}<button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button></div></div>${progressBarHtml}<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"><div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人']}</span></div><div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位']}</span></div><div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div></div><div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span></div></div>`;
+                const updateBtnHtml = isAdmin ?
+                [cite_start]`<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : ''; [cite: 141]
+                return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"><div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4"><div class="flex items-center space-x-4 mb-2 lg:mb-0"><h3 class="text-lg font-semibold text-gray-800">${app.id}</h3><span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span></div><div class="flex space-x-2">${updateBtnHtml}<button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button></div></div>${progressBarHtml}<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"><div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人']}</span></div><div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位']}</span></div><div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div></div><div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? [cite_start]'...' : ''}</span></div></div>`; [cite: 143]
             }).join('');
-        }
+        [cite_start]} [cite: 144]
         
         // --- 彈出視窗 (Modal) 相關函式 ---
 
         function closeModal(modalId) {
             const modal = document.getElementById(modalId);
-            if (modal) {
-                if (modal.id === 'adminModal') {
-                    modal.classList.add('hidden');
-                } else {
-                    modal.remove();
-                }
+            [cite_start]if (modal) { [cite: 145]
+                [cite_start]modal.remove(); [cite: 147]
             }
+        }
+
+        // For admin modal, we hide it, not remove it
+        function closeAdminModal() {
+            if(adminModal) adminModal.classList.add('hidden');
         }
 
         window.viewDetails = function (appId) {
             const app = allApplications.find(a => a.id === appId);
-            if (!app) {
+            [cite_start]if (!app) { [cite: 148]
                 showMessage(errorMessage, `在快取中找不到申請編號：${appId}`);
-                return;
+                [cite_start]return; [cite: 149]
             }
             showDetailsModal(app);
         };
-
-        function showDetailsModal(app) {
+        [cite_start]function showDetailsModal(app) { [cite: 150]
             let statusHistory = {};
-            try {
+            [cite_start]try { [cite: 151]
                 if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) {
                     statusHistory = JSON.parse(app['狀態歷史紀錄']);
-                }
+                [cite_start]} [cite: 152]
             } catch (e) { /* ignore */ }
             const modal = document.createElement('div');
-            modal.id = 'detailsModal';
+            [cite_start]modal.id = 'detailsModal'; [cite: 153]
             modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-            modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">申請詳情</h3><button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button></div><div class="space-y-4"><div class="grid grid-cols-2 gap-4 text-sm"><div><strong>申請編號：</strong>${app.id || 'N/A'}</div><div><strong>狀態：</strong>${app['狀態'] || 'N/A'}</div><div><strong>申請人：</strong>${app['申請人'] || 'N/A'}</div><div><strong>申請單位：</strong>${app['申請單位'] || 'N/A'}</div><div><strong>職稱：</strong>${app['職稱'] || 'N/A'}</div><div><strong>聯繫方式：</strong>${app['聯繫方式'] || 'N/A'}</div><div class="col-span-2"><strong>信箱：</strong>${app['信箱'] || 'N/A'}</div><div class="col-span-2"><strong>教具規格：</strong><pre class="whitespace-pre-wrap font-sans">${app['教具品名規格'] || 'N/A'}</pre></div><div><strong>申請數量：</strong>${app['申請數量'] || 'N/A'}</div><div><strong>教學頻率：</strong>${app['教學頻率'] || 'N/A'}</div><div class="col-span-2"><strong>教學對象：</strong>${app['教學對象'] || 'N/A'}</div><div class="col-span-2"><strong>預期效益：</strong><pre class="whitespace-pre-wrap font-sans">${app['預期效益'] || 'N/A'}</pre></div><div class="col-span-2"><strong>附件：</strong>${app['附件'] || 'N/A'}</div><div><strong>提交日期：</strong>${new Date(app['時間戳記']).toLocaleString() || 'N/A'}</div></div></div></div>`;
-            modal.onclick = () => closeModal('detailsModal');
+            modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()"><div class="flex justify-between items-center mb-6"><h3 class="text-xl font-semibold">申請詳情</h3><button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button></div><div class="space-y-4"><div class="grid grid-cols-2 gap-4 text-sm"><div><strong>申請編號：</strong>${app.id || 'N/A'}</div><div><strong>狀態：</strong>${app['狀態'] || 'N/A'}</div><div><strong>申請人：</strong>${app['申請人'] || 'N/A'}</div><div><strong>申請單位：</strong>${app['申請單位'] || 'N/A'}</div><div><strong>職稱：</strong>${app['職稱'] || 'N/A'}</div><div><strong>聯繫方式：</strong>${app['聯繫方式'] || 'N/A'}</div><div class="col-span-2"><strong>信箱：</strong>${app['信箱'] || 'N/A'}</div><div class="col-span-2"><strong>教具規格：</strong><pre class="whitespace-pre-wrap font-sans">${app['教具品名規格'] || 'N/A'}</pre></div><div><strong>申請數量：</strong>${app['申請數量'] || 'N/A'}</div><div><strong>教學頻率：</strong>${app['教學頻率'] || 'N/A'}</div><div class="col-span-2"><strong>教學對象：</strong>${app['教學對象'] || 'N/A'}</div><div class="col-span-2"><strong>預期效益：</strong><pre class="whitespace-pre-wrap font-sans">${app['預期效益'] || 'N/A'}</pre></div><div class="col-span-2"><strong>附件：</strong>${app['附件'] || 'N/A'}</div><div><strong>提交日期：</strong>${new Date(app['時間戳記']).toLocaleString() || [cite_start]'N/A'}</div></div></div></div>`; [cite: 155, 156]
+            [cite_start]modal.onclick = () => closeModal('detailsModal'); [cite: 157]
             document.body.appendChild(modal);
         }
 
-        window.changeStatus = function (appId, currentStatus) {
+        [cite_start]window.changeStatus = function (appId, currentStatus) { [cite: 158]
             if (!isAdmin) return;
-            // ... (changeStatus and updateStatusInSheet are simplified for brevity, they remain unchanged)
+            // A placeholder for the detailed implementation of changing status
+            const newStatus = prompt(`Enter new status for ${appId} (current: ${currentStatus}):`, currentStatus);
+            if (newStatus && newStatus !== currentStatus) {
+                updateStatusInSheet(appId, newStatus);
+            }
         };
 
-        // --- 事件監聽器設定 ---
+        async function updateStatusInSheet(appId, newStatus) {
+            // Placeholder: This function would contain the fetch POST call to the backend to update the status.
+            console.log(`Updating ${appId} to ${newStatus}`);
+            // In a real implementation, you would make a fetch call here similar to the admin login or form submit.
+        }
+
+        [cite_start]// --- 事件監聽器設定 --- [cite: 159]
         
         applyBtn.addEventListener('click', () => showView('apply'));
-        statusBtn.addEventListener('click', () => showView('status'));
+        [cite_start]statusBtn.addEventListener('click', () => showView('status')); [cite: 160]
 
         searchBtn.addEventListener('click', () => {
             const searchTerm = searchInput.value;
             displayApplications(searchTerm);
         });
-
-        searchInput.addEventListener('keypress', (e) => {
+        [cite_start]searchInput.addEventListener('keypress', (e) => { [cite: 161]
             if (e.key === 'Enter') {
                 searchBtn.click();
             }
         });
-
-        adminLoginBtn.addEventListener('click', () => {
+        [cite_start]adminLoginBtn.addEventListener('click', () => { [cite: 162]
             adminModal.classList.remove('hidden');
             // 優化：自動對焦到密碼輸入框
             adminPasswordInput.focus();
         });
 
-        confirmAdminLogin.addEventListener('click', () => {
+        // Add a specific close button listener for admin modal
+        document.querySelector('#adminModal button[onclick*="closeAdminModal"]').addEventListener('click', closeAdminModal);
+
+        [cite_start]confirmAdminLogin.addEventListener('click', () => { [cite: 163]
             const password = adminPasswordInput.value;
             const payload = { action: 'verify_password', password: password };
 
             fetch(GOOGLE_APPS_SCRIPT_URL, {
                 method: 'POST',
                 body: JSON.stringify(payload),
-                headers: { 'Content-Type': 'application/json' },
+                 [cite_start]headers: { 'Content-Type': 'application/json' }, [cite: 164]
             })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok.');
                 }
-                const contentType = response.headers.get("content-type");
+                 [cite_start]const contentType = response.headers.get("content-type"); [cite: 165]
                 if (contentType && contentType.indexOf("application/json") !== -1) {
                     return response.json();
                 } else {
-                    return response.text().then(text => { throw new Error("Received non-JSON response: " + text); });
+                    [cite_start]return response.text().then(text => { throw new Error("Received non-JSON response: " + text); }); [cite: 166]
                 }
             })
             .then(result => {
                 if (result.result === 'success' && result.is_admin) {
                     isAdmin = true;
-                    // updateAdminUI(); // This function is not defined in the provided code
-                    adminLoginBtn.classList.add('hidden');
-                    adminInfo.classList.remove('hidden');
+                    [cite_start]adminLoginBtn.classList.add('hidden'); [cite: 167]
+                    [cite_start]adminInfo.classList.remove('hidden'); [cite: 168]
                     if (currentView === 'status') { fetchAndDisplayApplications(); }
-
-                    closeModal('adminModal');
-                    showMessage(successMessage, '管理員登入成功！');
+                    closeAdminModal();
+                    [cite_start]showMessage(successMessage, '管理員登入成功！'); [cite: 169]
                 } else {
                     isAdmin = false;
-                    showMessage(errorMessage, result.message || '密碼錯誤，請重試。');
+                    [cite_start]showMessage(errorMessage, result.message || '密碼錯誤，請重試。'); [cite: 170]
                 }
             })
             .catch(error => {
                 console.error('Error verifying password:', error);
                 showMessage(errorMessage, `登入驗證失敗: ${error.message}`);
             });
-        });
+        [cite_start]}); [cite: 171]
 
         // --- 優化：管理者登入體驗的事件監聽 ---
         togglePasswordVisibility.addEventListener('click', () => {
             const isPassword = adminPasswordInput.type === 'password';
             adminPasswordInput.type = isPassword ? 'text' : 'password';
             eyeOpen.classList.toggle('hidden', isPassword);
-
             eyeClosed.classList.toggle('hidden', !isPassword);
         });
-
-        adminPasswordInput.addEventListener('keypress', (e) => {
+        [cite_start]adminPasswordInput.addEventListener('keypress', (e) => { [cite: 172]
             if (e.key === 'Enter') {
                 e.preventDefault(); // 防止表單預設提交行為
                 confirmAdminLogin.click();
             }
         });
-
-        // --- 工具函式 ---
+        [cite_start]// --- 工具函式 --- [cite: 173]
         function showMessage(element, message) {
             element.textContent = message;
-            element.classList.remove('hidden');
+            [cite_start]element.classList.remove('hidden'); [cite: 174]
             element.classList.add('fade-in');
             setTimeout(() => {
                 element.classList.add('hidden');
                 element.classList.remove('fade-in');
             }, 5000);
-        }
+        [cite_start]} [cite: 175]
 
         // --- 初始載入 ---
         showView('apply');
-
-    </script>
+    [cite_start]</script> [cite: 176]
 </body>
 </html>
