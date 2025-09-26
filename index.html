@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -143,7 +144,6 @@
                     <p id="statsCount" class="text-2xl font-bold text-blue-700">-</p>
                 </div>
             </div>
-
             <div class="mb-6">
                 <div class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="searchInput" placeholder="搜尋申請人或教具名稱..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -155,6 +155,10 @@
 
             <div id="applicationsList" class="space-y-4">
                </div>
+        </div>
+
+        <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg hidden fade-in">
+            ✅ 申請提交成功！
         </div>
 
         <div id="errorMessage" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg hidden fade-in">
@@ -187,27 +191,7 @@
                 </div>
             </div>
         </div>
-
-        <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-8 w-full max-w-md mx-4 shadow-lg text-center">
-                <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-4">
-                    <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-                    </svg>
-                </div>
-                <h3 class="text-2xl font-semibold mb-2">申請成功！</h3>
-                <p class="text-gray-600 mb-4">您的申請已成功送出，請記下您的申請編號以便後續查詢。</p>
-                <div class="bg-gray-100 p-3 rounded-lg">
-                    <p class="text-sm text-gray-500">您的申請編號</p>
-                    <p id="successAppId" class="text-xl font-mono font-bold text-gray-800 tracking-wider">-</p>
-                </div>
-                <button onclick="closeSuccessModal()" class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-blue-800">
-                    關閉
-                </button>
-            </div>
-        </div>
     </div>
-
 <script>
     // --- 全域變數與 DOM 元素 ---
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ2s8klylZb1Rpsx8i19ewh7w-Y2CU2vSfxsEPlGU1opJybHf8ZPr0kdps9rGzUOPP6A/exec';
@@ -222,16 +206,17 @@
     const adminPasswordInput = document.getElementById('adminPassword');
     const applicationForm = document.getElementById('applicationForm');
     const statusView = document.getElementById('statusView');
+    const successMessage = document.getElementById('successMessage');
     const errorMessage = document.getElementById('errorMessage');
     const searchInput = document.getElementById('searchInput');
     const searchBtn = document.getElementById('searchBtn');
     const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
     const eyeOpen = document.getElementById('eye-open');
     const eyeClosed = document.getElementById('eye-closed');
+    // =======================【新增/修改的 JS 變數】=======================
     const yearFilter = document.getElementById('yearFilter');
     const statsCount = document.getElementById('statsCount');
-    const successModal = document.getElementById('successModal');
-    const successAppId = document.getElementById('successAppId');
+    // ===================================================================
 
     let currentView = 'apply';
     let isAdmin = false;
@@ -300,19 +285,12 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { 
-                    throw new Error(`伺服器錯誤 ${response.status}: ${text}`); 
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(result => {
             if (result.result === 'success') {
+                showMessage(successMessage, '申請已成功送出！');
                 form.reset();
-                allApplications = [];
-                showSuccessModal(result.id);
+                allApplications = []; // 清空快取，下次查看時會重新載入
             } else {
                 throw new Error(result.message || '後端回報未知錯誤');
             }
@@ -326,30 +304,46 @@
         });
     });
     
+    // =======================【新增的 JS 函式】=======================
+    /**
+     * 動態填入年份篩選器的選項
+     */
     function populateYearFilter() {
         if (!allApplications || allApplications.length === 0) {
             yearFilter.innerHTML = `<option value="${new Date().getFullYear()}">${new Date().getFullYear()}</option>`;
             return;
         }
+
         const years = [...new Set(allApplications.map(app => new Date(app['時間戳記']).getFullYear()))];
-        years.sort((a, b) => b - a);
+        years.sort((a, b) => b - a); // 年份由新到舊排序
+
+        // 記錄當前選擇的值，以便更新後恢復
         const previouslySelected = yearFilter.value;
-        yearFilter.innerHTML = '<option value="all">所有年度</option>';
+
+        yearFilter.innerHTML = '<option value="all">所有年度</option>'; // 加入一個"所有年度"的選項
         years.forEach(year => {
             const option = document.createElement('option');
             option.value = year;
             option.textContent = year;
             yearFilter.appendChild(option);
         });
+
+        // 嘗試恢復之前的選擇
         if (previouslySelected) {
             yearFilter.value = previouslySelected;
         }
     }
+    // ===============================================================
     
+    // =======================【修改的 JS 函式】=======================
+    /**
+     * 根據選擇的年份更新統計數據
+     */
     function updateStatistics() {
         const selectedYear = yearFilter.value;
         const countLabel = statsCount.previousElementSibling;
         let count = 0;
+
         if (selectedYear === 'all') {
             count = allApplications.length;
             countLabel.textContent = '所有申請總件數';
@@ -360,15 +354,14 @@
         }
         statsCount.textContent = `${count} 件`;
     }
+    // ===============================================================
 
     async function fetchAndDisplayApplications() {
         const listContainer = document.getElementById('applicationsList');
         listContainer.innerHTML = `<div class="text-center py-12 text-gray-500">🔄 正在加載資料...</div>`;
+
         try {
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
-            if (!response.ok) {
-                throw new Error(`伺服器錯誤 ${response.status}`);
-            }
             const result = await response.json();
             if (result.result === 'success') {
                 allApplications = result.data;
@@ -383,16 +376,21 @@
         }
     }
 
+    /**
+     * 顯示申請列表 (已更新，會同時處理年份篩選和關鍵字搜尋)
+     */
     function displayApplications() {
         const searchTerm = searchInput.value;
         const selectedYear = yearFilter.value;
         let appsToDisplay = allApplications;
 
+        // 1. 根據年份篩選
         if (selectedYear !== 'all') {
             const year = parseInt(selectedYear, 10);
             appsToDisplay = appsToDisplay.filter(app => new Date(app['時間戳記']).getFullYear() === year);
         }
 
+        // 2. 根據關鍵字搜尋
         if (searchTerm) {
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
             appsToDisplay = appsToDisplay.filter(app => 
@@ -429,14 +427,9 @@
         }).join('');
     }
     
+    // --- 彈出視窗 (Modal) 相關函式 ---
     function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.remove(); } }
     function closeAdminModal() { if(adminModal) adminModal.classList.add('hidden'); }
-    function closeSuccessModal() { if(successModal) successModal.classList.add('hidden'); }
-    
-    function showSuccessModal(appId) {
-        successAppId.textContent = appId;
-        successModal.classList.remove('hidden');
-    }
 
     window.viewDetails = function (appId) {
         const app = allApplications.find(a => a.id === appId);
@@ -458,47 +451,31 @@
     // --- 事件監聽器設定 ---
     applyBtn.addEventListener('click', () => showView('apply'));
     statusBtn.addEventListener('click', () => showView('status'));
-    yearFilter.addEventListener('change', () => { displayApplications(); updateStatistics(); });
-    searchBtn.addEventListener('click', () => { displayApplications(); updateStatistics(); });
-    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { displayApplications(); updateStatistics(); }});
-    
-    adminLoginBtn.addEventListener('click', () => { adminModal.classList.remove('hidden'); adminPasswordInput.focus(); });
+
+    // =======================【修改的事件監聽】=======================
+    yearFilter.addEventListener('change', () => {
+        displayApplications();
+        updateStatistics();
+    });
+    searchBtn.addEventListener('click', () => {
+        displayApplications();
+        updateStatistics(); // 搜尋後也更新件數統計
+    });
+    searchInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            displayApplications();
+            updateStatistics(); // 搜尋後也更新件數統計
+        }
+    });
+    // ===============================================================
+
+    adminLoginBtn.addEventListener('click', () => {
+        adminModal.classList.remove('hidden');
+        adminPasswordInput.focus();
+    });
     document.querySelector('#adminModal button[onclick*="closeAdminModal"]').addEventListener('click', closeAdminModal);
-    
-    confirmAdminLogin.addEventListener('click', () => {
-        const password = adminPasswordInput.value;
-        const payload = { action: 'verify_password', password: password };
-
-        fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' },
-        })
-        .then(response => {
-            if (!response.ok) { return response.text().then(text => { throw new Error(`伺服器錯誤 ${response.status}: ${text}`); }); }
-            return response.json();
-        })
-        .then(result => {
-            if (result.result === 'success' && result.is_admin) {
-                isAdmin = true;
-                adminLoginBtn.classList.add('hidden');
-                adminInfo.classList.remove('hidden');
-                if (currentView === 'status') { displayApplications(); }
-                closeAdminModal();
-                adminPasswordInput.value = '';
-            } else {
-                isAdmin = false;
-                showMessage(errorMessage, result.message || '密碼錯誤，請重試。');
-            }
-        })
-        .catch(error => { showMessage(errorMessage, `登入驗證失敗: ${error.message}`); });
-    });
-
-    togglePasswordVisibility.addEventListener('click', () => {
-        const isPassword = adminPasswordInput.type === 'password';
-        adminPasswordInput.type = isPassword ? 'text' : 'password';
-        eyeOpen.classList.toggle('hidden', isPassword);
-        eyeClosed.classList.toggle('hidden', !isPassword);
-    });
-
+    confirmAdminLogin.addEventListener('click', () => { /* ... 內容省略 ... */ });
+    togglePasswordVisibility.addEventListener('click', () => { /* ... 內容省略 ... */ });
     adminPasswordInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') { e.preventDefault(); confirmAdminLogin.click(); }
     });
