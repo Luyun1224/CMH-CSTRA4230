@@ -13,12 +13,9 @@
             animation: fadeIn 0.3s ease-in;
         }
         @keyframes fadeIn {
-            from { opacity: 0;
-            transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0);
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        }
-        /* 隱藏密碼輸入框的顯示/隱藏按鈕的預設樣式 */
         input[type="password"]::-ms-reveal,
         input[type="password"]::-ms-clear {
             display: none;
@@ -49,7 +46,7 @@
             </button>
         </div>
 
-        
+        <!-- 申請表單 -->
         <div id="applicationForm" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 mb-8">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">教具申請表</h2>
             
@@ -60,65 +57,65 @@
                     </h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                             <label class="block text-sm font-medium text-gray-700 mb-2">申請單位 *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">申請單位 *</label>
                             <input type="text" id="department" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
-                         <div>
+                        <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">申請人 *</label>
                             <input type="text" id="applicant" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                         </div>
+                        </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">職稱 *</label>
                             <input type="text" id="position" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">聯繫方式 *</label>
-                             <input type="tel" id="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <input type="tel" id="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                         <div class="md:col-span-2">
-                             <label class="block text-sm font-medium text-gray-700 mb-2">信箱 *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">信箱 *</label>
                             <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                     </div>
-                 </div>
+                </div>
 
                 <div class="mb-8">
                     <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
                         🔧 二、教具資訊
                     </h3>
-                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">教具品名規格 *</label>
-                             <textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具的品名、型號、規格等"></textarea>
+                            <textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具的品名、型號、規格等"></textarea>
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-2">申請數量 *</label>
                             <input type="number" id="quantity" required min="1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                         </div>
                         <div>
-                             <label class="block text-sm font-medium text-gray-700 mb-2">教學頻率 *</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">教學頻率 *</label>
                             <select id="frequency" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                                 <option value="">請選擇</option>
-                                 <option value="每週">每週</option>
+                                <option value="每週">每週</option>
                                 <option value="每月">每月</option>
                                 <option value="每學期">每學期</option>
-                                 <option value="不定期">不定期</option>
+                                <option value="不定期">不定期</option>
                             </select>
                         </div>
-                         <div class="md:col-span-2">
+                        <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">預期效益 *</label>
                             <textarea id="expectedBenefit" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請說明使用此教具預期達到的教學效果"></textarea>
-                         </div>
+                        </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">教學對象 *</label>
-                            <input type="text" id="targetAudience" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例：國小三年級學生、成人學習者等">
+                            <input type="text" id="targetAudience" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例如：國小三年級學生、成人學習者等">
                         </div>
                         <div class="md:col-span-2">
                             <label class="block text-sm font-medium text-gray-700 mb-2">檢附教學相關課程表或計劃書 (非必填)</label>
-                             <input type="file" id="attachments" accept=".pdf,.doc,.docx,.jpg,.png" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <p class="text-sm text-gray-500 mt-1">支援格式：PDF, DOC, DOCX, JPG, PNG</p>
+                            <input type="file" id="attachments" accept=".pdf,.doc,.docx,.jpg,.png" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <p class="text-sm text-gray-500 mt-1">支持格式：PDF, DOC, DOCX, JPG, PNG</p>
                         </div>
-                     </div>
+                    </div>
                 </div>
 
                 <div class="flex justify-center">
@@ -129,6 +126,7 @@
             </form>
         </div>
 
+        <!-- 狀態查看 -->
         <div id="statusView" class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8 hidden">
             <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">申請狀態查詢</h2>
             
@@ -143,19 +141,20 @@
                     <p id="statsCount" class="text-2xl font-bold text-blue-700">-</p>
                 </div>
             </div>
+            
             <div class="mb-6">
                 <div class="flex flex-col sm:flex-row gap-4">
                     <input type="text" id="searchInput" placeholder="搜尋申請人或教具名稱..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
                     <button id="searchBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors active:scale-95 active:bg-blue-800">
-                         🔍 搜尋
+                        🔍 搜尋
                     </button>
                 </div>
             </div>
 
-            <div id="applicationsList" class="space-y-4">
-               </div>
+            <div id="applicationsList" class="space-y-4"></div>
         </div>
 
+        <!-- 訊息顯示 -->
         <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg hidden fade-in">
             ✅ 申請提交成功！
         </div>
@@ -164,35 +163,37 @@
             ❌ 發生錯誤！
         </div>
 
+        <!-- 管理員登入模態框 -->
         <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
             <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4 shadow-lg">
                 <h3 class="text-xl font-semibold mb-4">管理者登入</h3>
                 <div class="relative mb-4">
                     <input type="password" id="adminPassword" placeholder="請輸入密碼" class="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10">
-                     <button type="button" id="togglePasswordVisibility" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700">
+                    <button type="button" id="togglePasswordVisibility" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700">
                         <svg id="eye-open" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
                         <svg id="eye-closed" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 .847 0 1.673.124 2.468.352M10.582 10.582a3 3 0 112.836 2.836M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274-4.057 5.064-7 9.542-7 .847 0 1.673.124 2.468.352M10.582 10.582a3 3 0 112.836 2.836M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.75 4.75l14.5 14.5" />
                         </svg>
                     </button>
                 </div>
                 <div class="flex space-x-3">
-                   <button id="confirmAdminLogin" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-blue-800">
+                    <button id="confirmAdminLogin" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-blue-800">
                         確認
                     </button>
                     <button onclick="closeAdminModal()" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-gray-600">
-                         取消
+                        取消
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
 <script>
-    // --- 全域變數與 DOM 元素 ---
+    // 全域變數與 DOM 元素
     const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZ2s8klylZb1Rpsx8i19ewh7w-Y2CU2vSfxsEPlGU1opJybHf8ZPr0kdps9rGzUOPP6A/exec';
     
     const form = document.getElementById('equipmentForm');
@@ -212,16 +213,14 @@
     const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
     const eyeOpen = document.getElementById('eye-open');
     const eyeClosed = document.getElementById('eye-closed');
-    // =======================【新增/修改的 JS 變數】=======================
     const yearFilter = document.getElementById('yearFilter');
     const statsCount = document.getElementById('statsCount');
-    // ===================================================================
 
     let currentView = 'apply';
     let isAdmin = false;
     let allApplications = [];
 
-    // --- 設定與靜態資料 ---
+    // 狀態設定
     const statusOptions = [
         { value: '已提交', label: '已提交', color: 'bg-blue-100 text-blue-800' },
         { value: '已收件', label: '已收件', color: 'bg-yellow-100 text-yellow-800' },
@@ -230,14 +229,15 @@
         { value: '已駁回', label: '已駁回', color: 'bg-red-100 text-red-800' },
         { value: '已完成', label: '已完成', color: 'bg-purple-100 text-purple-800' }
     ];
+    
     const progressSteps = [
         { key: '已提交', label: '申請中', icon: '📝' },
         { key: '已收件', label: '中心收件', icon: '📨' },
-        { key: '已核准', label: '請購中', icon: '🔍' },
+        { key: '已核准', label: '請購中', icon: '📋' },
         { key: '已完成', label: '已送達', icon: '✅' }
     ];
 
-    // --- 核心函式 ---
+    // 核心函式
     function showView(view) {
         currentView = view;
         if (view === 'apply') {
@@ -250,14 +250,14 @@
             statusView.classList.remove('hidden');
             applyBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
             statusBtn.className = 'bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
-            // 只有在還沒有資料時才重新獲取
             if(allApplications.length === 0) {
                 fetchAndDisplayApplications();
             }
         }
     }
 
-    form.addEventListener('submit', (e) => {
+    // 表單提交處理
+    form.addEventListener('submit', async (e) => {
         e.preventDefault();
         const submitButton = e.target.querySelector('button[type="submit"]');
         submitButton.disabled = true;
@@ -278,35 +278,38 @@
             attachments: document.getElementById('attachments').files[0]?.name || '無'
         };
         
-        fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData)
-        })
-        .then(response => response.json())
-        .then(result => {
+        try {
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                cache: 'no-cache',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP 錯誤: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
             if (result.result === 'success') {
                 showMessage(successMessage, '申請已成功送出！');
                 form.reset();
-                allApplications = []; // 清空快取，下次查看時會重新載入
+                allApplications = [];
             } else {
                 throw new Error(result.message || '後端回報未知錯誤');
             }
-        })
-        .catch(error => {
+        } catch (error) {
+            console.error('提交錯誤:', error);
             showMessage(errorMessage, `提交失敗：${error.message}`);
-        })
-        .finally(() => {
+        } finally {
             submitButton.disabled = false;
             submitButton.innerHTML = '🚀 提交申請';
-        });
+        }
     });
     
-    // =======================【新增的 JS 函式】=======================
-    /**
-     * 動態填入年份篩選器的選項
-     */
+    // 年份篩選器填充
     function populateYearFilter() {
         if (!allApplications || allApplications.length === 0) {
             yearFilter.innerHTML = `<option value="${new Date().getFullYear()}">${new Date().getFullYear()}</option>`;
@@ -314,12 +317,10 @@
         }
 
         const years = [...new Set(allApplications.map(app => new Date(app['時間戳記']).getFullYear()))];
-        years.sort((a, b) => b - a); // 年份由新到舊排序
+        years.sort((a, b) => b - a);
 
-        // 記錄當前選擇的值，以便更新後恢復
         const previouslySelected = yearFilter.value;
-
-        yearFilter.innerHTML = '<option value="all">所有年度</option>'; // 加入一個"所有年度"的選項
+        yearFilter.innerHTML = '<option value="all">所有年度</option>';
         years.forEach(year => {
             const option = document.createElement('option');
             option.value = year;
@@ -327,17 +328,12 @@
             yearFilter.appendChild(option);
         });
 
-        // 嘗試恢復之前的選擇
         if (previouslySelected) {
             yearFilter.value = previouslySelected;
         }
     }
-    // ===============================================================
     
-    // =======================【修改的 JS 函式】=======================
-    /**
-     * 根據選擇的年份更新統計數據
-     */
+    // 更新統計資訊
     function updateStatistics() {
         const selectedYear = yearFilter.value;
         const countLabel = statsCount.previousElementSibling;
@@ -353,15 +349,25 @@
         }
         statsCount.textContent = `${count} 件`;
     }
-    // ===============================================================
 
+    // 獲取並顯示申請資料
     async function fetchAndDisplayApplications() {
         const listContainer = document.getElementById('applicationsList');
-        listContainer.innerHTML = `<div class="text-center py-12 text-gray-500">🔄 正在加載資料...</div>`;
+        listContainer.innerHTML = `<div class="text-center py-12 text-gray-500">📄 正在加載資料...</div>`;
 
         try {
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'no-cache'
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP 錯誤: ${response.status}`);
+            }
+            
             const result = await response.json();
+            
             if (result.result === 'success') {
                 allApplications = result.data;
                 populateYearFilter();
@@ -371,25 +377,22 @@
                 throw new Error(result.message);
             }
         } catch (error) {
+            console.error('獲取資料錯誤:', error);
             listContainer.innerHTML = `<div class="text-center py-12 text-red-500">❌ 無法加載申請資料：${error.message}</div>`;
         }
     }
 
-    /**
-     * 顯示申請列表 (已更新，會同時處理年份篩選和關鍵字搜尋)
-     */
+    // 顯示申請列表
     function displayApplications() {
         const searchTerm = searchInput.value;
         const selectedYear = yearFilter.value;
         let appsToDisplay = allApplications;
 
-        // 1. 根據年份篩選
         if (selectedYear !== 'all') {
             const year = parseInt(selectedYear, 10);
             appsToDisplay = appsToDisplay.filter(app => new Date(app['時間戳記']).getFullYear() === year);
         }
 
-        // 2. 根據關鍵字搜尋
         if (searchTerm) {
             const lowerCaseSearchTerm = searchTerm.toLowerCase();
             appsToDisplay = appsToDisplay.filter(app => 
@@ -407,32 +410,59 @@
         container.innerHTML = appsToDisplay.map(app => {
             const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] || '未知' };
             const getCurrentStepIndex = (status) => {
-                switch (status) { case '已提交': return 0; case '已收件': return 1; case '審核中': case '已核准': return 2; case '已完成': return 3; default: return -1; }
+                switch (status) { 
+                    case '已提交': return 0; 
+                    case '已收件': return 1; 
+                    case '審核中': case '已核准': return 2; 
+                    case '已完成': return 3; 
+                    default: return -1; 
+                }
             };
             const currentStepIndex = getCurrentStepIndex(app['狀態']);
             let progressBarHtml;
+            
             if (app['狀態'] === '已駁回') {
                 progressBarHtml = `<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"><div class="flex items-center text-red-600"><span class="text-2xl mr-3">❌</span><span class="font-medium">申請已被駁回</span></div></div>`;
             } else {
                 let statusHistory = {};
-                try { if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) { statusHistory = JSON.parse(app['狀態歷史紀錄']); } } catch (e) {}
+                try { 
+                    if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) { 
+                        statusHistory = JSON.parse(app['狀態歷史紀錄']); 
+                    } 
+                } catch (e) {}
+                
                 progressBarHtml = `<div class="bg-gray-50 rounded-lg p-4 mb-4"><div class="flex items-center justify-between relative">${progressSteps.map((step, index) => {
-                    const isCompleted = index <= currentStepIndex; const isCurrent = index === currentStepIndex; const date = statusHistory[step.key] || '';
+                    const isCompleted = index <= currentStepIndex; 
+                    const isCurrent = index === currentStepIndex; 
+                    const date = statusHistory[step.key] || '';
                     return `<div class="flex flex-col items-center relative z-10 w-1/4"><div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'}">${step.icon}</div><span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span><span class="text-xs text-gray-500 mt-1">${date}</span>${isCurrent ? '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}</div>${index < progressSteps.length - 1 ? `<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`;
                 }).join('')}</div></div>`;
             }
+            
             const updateBtnHtml = isAdmin ? `<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : '';
-            return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"><div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4"><div class="flex items-center space-x-4 mb-2 lg:mb-0"><h3 class="text-lg font-semibold text-gray-800">${app.id}</h3><span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span></div><div class="flex space-x-2">${updateBtnHtml}<button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button></div></div>${progressBarHtml}<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"><div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人']}</span></div><div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位']}</span></div><div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div></div><div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span></div></div>`;
+            
+            return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"><div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4"><div class="flex items-center space-x-4 mb-2 lg:mb-0"><h3 class="text-lg font-semibold text-gray-800">${app.id}</h3><span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span></div><div class="flex space-x-2">${updateBtnHtml}<button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button></div></div>${progressBarHtml}<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm"><div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人'] || ''}</span></div><div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位'] || ''}</span></div><div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div></div><div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span></div></div>`;
         }).join('');
     }
     
-    // --- 彈出視窗 (Modal) 相關函式 ---
-    function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.remove(); } }
-    function closeAdminModal() { if(adminModal) adminModal.classList.add('hidden'); }
+    // 模態框相關函式
+    function closeModal(modalId) { 
+        const modal = document.getElementById(modalId); 
+        if (modal) { 
+            modal.remove(); 
+        } 
+    }
+    
+    function closeAdminModal() { 
+        if(adminModal) adminModal.classList.add('hidden'); 
+    }
 
     window.viewDetails = function (appId) {
         const app = allApplications.find(a => a.id === appId);
-        if (!app) { showMessage(errorMessage, `在快取中找不到申請編號：${appId}`); return; }
+        if (!app) { 
+            showMessage(errorMessage, `在快取中找不到申請編號：${appId}`); 
+            return; 
+        }
         showDetailsModal(app);
     };
 
@@ -445,38 +475,135 @@
         document.body.appendChild(modal);
     }
 
-    window.changeStatus = function (appId, currentStatus) { /* ... 內容省略 ... */ };
+    window.changeStatus = function (appId, currentStatus) {
+        if (!isAdmin) {
+            showMessage(errorMessage, '您沒有管理權限');
+            return;
+        }
+        
+        const modal = document.createElement('div');
+        modal.id = 'statusModal';
+        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+        
+        const statusDropdown = statusOptions.map(option => 
+            `<option value="${option.value}" ${option.value === currentStatus ? 'selected' : ''}>${option.label}</option>`
+        ).join('');
+        
+        modal.innerHTML = `<div class="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-lg"><h3 class="text-xl font-semibold mb-4">更新申請狀態</h3><div class="mb-4"><label class="block text-sm font-medium text-gray-700 mb-2">申請編號：${appId}</label><select id="newStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg">${statusDropdown}</select></div><div class="flex space-x-3"><button onclick="updateStatus('${appId}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">更新</button><button onclick="closeModal('statusModal')" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg">取消</button></div></div>`;
+        
+        document.body.appendChild(modal);
+    };
 
-    // --- 事件監聽器設定 ---
+    window.updateStatus = async function (appId) {
+        const newStatus = document.getElementById('newStatus').value;
+        
+        try {
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'update_status',
+                    id: appId,
+                    newStatus: newStatus
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.result === 'success') {
+                showMessage(successMessage, '狀態更新成功');
+                allApplications = [];
+                fetchAndDisplayApplications();
+            } else {
+                throw new Error(result.message);
+            }
+        } catch (error) {
+            showMessage(errorMessage, `狀態更新失敗：${error.message}`);
+        }
+        
+        closeModal('statusModal');
+    };
+
+    // 事件監聽器
     applyBtn.addEventListener('click', () => showView('apply'));
     statusBtn.addEventListener('click', () => showView('status'));
 
-    // =======================【修改的事件監聽】=======================
     yearFilter.addEventListener('change', () => {
         displayApplications();
         updateStatistics();
     });
+    
     searchBtn.addEventListener('click', () => {
         displayApplications();
-        updateStatistics(); // 搜尋後也更新件數統計
+        updateStatistics();
     });
+    
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             displayApplications();
-            updateStatistics(); // 搜尋後也更新件數統計
+            updateStatistics();
         }
     });
-    // ===============================================================
 
     adminLoginBtn.addEventListener('click', () => {
         adminModal.classList.remove('hidden');
         adminPasswordInput.focus();
     });
-    document.querySelector('#adminModal button[onclick*="closeAdminModal"]').addEventListener('click', closeAdminModal);
-    confirmAdminLogin.addEventListener('click', () => { /* ... 內容省略 ... */ });
-    togglePasswordVisibility.addEventListener('click', () => { /* ... 內容省略 ... */ });
+
+    confirmAdminLogin.addEventListener('click', async () => {
+        const password = adminPasswordInput.value;
+        
+        if (!password) {
+            showMessage(errorMessage, '請輸入密碼');
+            return;
+        }
+        
+        try {
+            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'verify_password',
+                    password: password
+                })
+            });
+            
+            const result = await response.json();
+            
+            if (result.result === 'success' && result.is_admin) {
+                isAdmin = true;
+                adminLoginBtn.style.display = 'none';
+                adminInfo.classList.remove('hidden');
+                closeAdminModal();
+                showMessage(successMessage, '管理員登入成功');
+                
+                if (currentView === 'status') {
+                    displayApplications();
+                }
+            } else {
+                throw new Error(result.message || '密碼錯誤');
+            }
+        } catch (error) {
+            showMessage(errorMessage, `登入失敗：${error.message}`);
+        }
+        
+        adminPasswordInput.value = '';
+    });
+
+    togglePasswordVisibility.addEventListener('click', () => {
+        const isPassword = adminPasswordInput.type === 'password';
+        adminPasswordInput.type = isPassword ? 'text' : 'password';
+        eyeOpen.classList.toggle('hidden', !isPassword);
+        eyeClosed.classList.toggle('hidden', isPassword);
+    });
+
     adminPasswordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); confirmAdminLogin.click(); }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            confirmAdminLogin.click();
+        }
     });
     
     function showMessage(element, message) {
@@ -489,7 +616,7 @@
         }, 5000);
     }
 
-    // --- 初始載入 ---
+    // 初始載入
     showView('apply');
 </script>
 </body>
