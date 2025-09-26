@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -266,6 +267,7 @@
             statusView.classList.remove('hidden');
             applyBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
             statusBtn.className = 'bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
+            // 只有在還沒有資料時才重新獲取
             if(allApplications.length === 0) {
                 fetchAndDisplayApplications();
             }
@@ -299,18 +301,11 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
         })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(text => { 
-                    throw new Error(`伺服器錯誤 ${response.status}: ${text}`); 
-                });
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(result => {
             if (result.result === 'success') {
                 form.reset();
-                allApplications = [];
+                allApplications = []; // 清空快取，下次查看時會重新載入
                 showSuccessModal(result.id);
             } else {
                 throw new Error(result.message || '後端回報未知錯誤');
@@ -330,9 +325,12 @@
             yearFilter.innerHTML = `<option value="${new Date().getFullYear()}">${new Date().getFullYear()}</option>`;
             return;
         }
+
         const years = [...new Set(allApplications.map(app => new Date(app['時間戳記']).getFullYear()))];
         years.sort((a, b) => b - a);
+
         const previouslySelected = yearFilter.value;
+
         yearFilter.innerHTML = '<option value="all">所有年度</option>';
         years.forEach(year => {
             const option = document.createElement('option');
@@ -340,6 +338,7 @@
             option.textContent = year;
             yearFilter.appendChild(option);
         });
+
         if (previouslySelected) {
             yearFilter.value = previouslySelected;
         }
@@ -349,6 +348,7 @@
         const selectedYear = yearFilter.value;
         const countLabel = statsCount.previousElementSibling;
         let count = 0;
+
         if (selectedYear === 'all') {
             count = allApplications.length;
             countLabel.textContent = '所有申請總件數';
@@ -363,11 +363,9 @@
     async function fetchAndDisplayApplications() {
         const listContainer = document.getElementById('applicationsList');
         listContainer.innerHTML = `<div class="text-center py-12 text-gray-500">🔄 正在加載資料...</div>`;
+
         try {
             const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
-            if (!response.ok) {
-                throw new Error(`伺服器錯誤 ${response.status}`);
-            }
             const result = await response.json();
             if (result.result === 'success') {
                 allApplications = result.data;
@@ -471,10 +469,7 @@
         fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: 'POST', body: JSON.stringify(payload), headers: { 'Content-Type': 'application/json' },
         })
-        .then(response => {
-            if (!response.ok) { return response.text().then(text => { throw new Error(`伺服器錯誤 ${response.status}: ${text}`); }); }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(result => {
             if (result.result === 'success' && result.is_admin) {
                 isAdmin = true;
