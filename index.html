@@ -1,582 +1,77 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>奇美醫院臨床技能中心教具申請管理系統</title>
+    <title>奇美醫院臨床技能中心 - 線上申請系統</title>
+    <!-- 引入 Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        body { box-sizing: border-box; }
-        .fade-in { animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px);} to { opacity:1; transform: translateY(0);} }
-        input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none; }
+        /* 使用 Noto Sans TC 作為預設字體 */
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc; /* 使用更柔和的淺灰色 slate-50 */
+            /* 增加細微的背景圓點圖案 */
+            background-image: radial-gradient(#dbeafe 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen font-sans">
-    <div class="container mx-auto px-4 py-8 relative">
-        <div class="absolute top-8 right-8 text-right text-sm text-gray-600 space-y-1">
-            <button id="adminLoginBtn" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition-colors">管理者登入</button>
-            <div id="admin-info" class="hidden">
-                <p class="font-bold text-gray-800">管理員</p>
-                <p id="adminStatusText" class="text-green-700 font-bold text-xs">已取得管理權限</p>
-            </div>
-        </div>
+<body class="flex flex-col min-h-screen">
 
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">奇美醫院臨床技能中心教具申請管理系統</h1>
-            <p class="text-gray-600">申請教具並追蹤申請進度</p>
-        </div>
+    <!-- 主容器 -->
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl flex-grow">
 
-        <div class="flex justify-center mb-8 space-x-4">
-            <button id="applyBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors">
-                📝 新增申請
-            </button>
-            <button id="statusBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors">
-                📊 查看狀態
-            </button>
-        </div>
+        <!-- 頁面標頭 -->
+        <header class="text-center pt-8 md:pt-12 mb-10 md:mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800 tracking-wide">臨床技能中心線上申請系統</h1>
+            <p class="text-gray-600 mt-4 text-lg">請點擊下方圖示，進入您要申請的項目。</p>
+            <!-- 新增的裝飾線 -->
+            <div class="w-20 h-1 bg-blue-300 mx-auto mt-4 rounded-full"></div>
+        </header>
 
-        <!-- 申請表單 -->
-        <div id="applicationForm" class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">教具申請表</h2>
-            <form id="equipmentForm">
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">👤 一、基本資料</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">申請單位 *</label>
-                            <input type="text" id="department" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">申請人 *</label>
-                            <input type="text" id="applicant" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">職稱 *</label>
-                            <input type="text" id="position" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">聯繫方式 *</label>
-                            <input type="tel" id="contact" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">信箱 *</label>
-                            <input type="email" id="email" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
+        <!-- 內容區塊: 兩個連結入口 -->
+        <main>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                
+                <!-- 1. 標準化病人申請 (更新卡片樣式) -->
+                <a href="#" class="group block text-center bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-in-out border-t-4 border-blue-400">
+                    <div class="w-28 h-28 mx-auto bg-blue-100 rounded-full flex items-center justify-center transition-colors duration-300 group-hover:bg-blue-200">
+                        <!-- SVG 圖示: 標準化病人 -->
+                        <svg class="w-16 h-16 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                        </svg>
                     </div>
-                </div>
-
-                <div class="mb-8">
-                    <h3 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">🔧 二、教具資訊</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">教具品名規格 *</label>
-                            <textarea id="equipmentSpec" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請詳細描述教具的品名、型號、規格等"></textarea>
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">申請數量 *</label>
-                            <input type="number" id="quantity" required min="1" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-2">教學頻率 *</label>
-                            <select id="frequency" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                                <option value="">請選擇</option>
-                                <option value="每週">每週</option>
-                                <option value="每月">每月</option>
-                                <option value="每學期">每學期</option>
-                                <option value="不定期">不定期</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">預期效益 *</label>
-                            <textarea id="expectedBenefit" required rows="3" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="請說明使用此教具預期達到的教學效果"></textarea>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">教學對象 *</label>
-                            <input type="text" id="targetAudience" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="例如：國小三年級學生、成人學習者等">
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">檢附教學相關課程表或計劃書 (非必填)</label>
-                            <input type="file" id="attachments" accept=".pdf,.doc,.docx,.jpg,.png" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                            <p class="text-sm text-gray-500 mt-1">支持格式：PDF, DOC, DOCX, JPG, PNG</p>
-                        </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mt-6 transition-colors duration-300 group-hover:text-blue-700">標準化病人申請</h2>
+                    <p class="text-gray-500 mt-2">Standardized Patient</p>
+                </a>
+                
+                <!-- 2. 教具申請 (更新卡片樣式) -->
+                <a href="#" class="group block text-center bg-white p-8 rounded-2xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 ease-in-out border-t-4 border-teal-400">
+                     <div class="w-28 h-28 mx-auto bg-teal-100 rounded-full flex items-center justify-center transition-colors duration-300 group-hover:bg-teal-200">
+                        <!-- SVG 圖示: 教具 -->
+                         <svg class="w-16 h-16 text-teal-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                         </svg>
                     </div>
-                </div>
+                    <h2 class="text-2xl font-bold text-gray-800 mt-6 transition-colors duration-300 group-hover:text-teal-700">教具申請</h2>
+                    <p class="text-gray-500 mt-2">Training Aids</p>
+                </a>
 
-                <div class="flex justify-center">
-                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-medium transition-all duration-200 active:scale-95 active:bg-blue-800">
-                        🚀 提交申請
-                    </button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 狀態查看 -->
-        <div id="statusView" class="max-w-6xl mx-auto bg-white rounded-xl shadow-lg p-8 hidden">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">申請狀態查詢</h2>
-            <div id="statistics" class="mb-6 bg-blue-50 border border-blue-200 p-4 rounded-lg flex items-center justify-center space-x-8 text-center">
-                <div>
-                    <label for="yearFilter" class="text-sm text-gray-600">篩選年度</label>
-                    <select id="yearFilter" class="mt-1 block w-40 pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md font-bold text-blue-700"></select>
-                </div>
-                <div class="border-l border-gray-300 h-12"></div>
-                <div>
-                    <p class="text-sm text-gray-600">顯示件數</p>
-                    <p id="statsCount" class="text-2xl font-bold text-blue-700">-</p>
-                </div>
             </div>
-
-            <div class="mb-6">
-                <div class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="searchInput" placeholder="搜尋申請人或教具名稱..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                    <button id="searchBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors active:scale-95 active:bg-blue-800">🔍 搜尋</button>
-                </div>
-            </div>
-
-            <div id="applicationsList" class="space-y-4"></div>
-        </div>
-
-        <!-- 右上角訊息 -->
-        <div id="successMessage" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg hidden fade-in">✅ 申請提交成功！</div>
-        <div id="errorMessage" class="fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg hidden fade-in">❌ 發生錯誤！</div>
-
-        <!-- 管理員登入模態框 -->
-        <div id="adminModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-6 w-full max-w-sm mx-4 shadow-lg">
-                <h3 class="text-xl font-semibold mb-4">管理者登入</h3>
-                <div class="relative mb-4">
-                    <input type="password" id="adminPassword" placeholder="請輸入密碼" class="w-full px-4 py-3 border border-gray-300 rounded-lg pr-10">
-                    <button type="button" id="togglePasswordVisibility" class="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-700">
-                        <svg id="eye-open" class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                        <svg id="eye-closed" class="h-5 w-5 hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.542-7 1.274 4.057-5.064 7-9.542 7 .847 0 1.673.124 2.468.352M10.582 10.582a3 3 0 112.836 2.836M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.75 4.75l14.5 14.5" /></svg>
-                    </button>
-                </div>
-                <div class="flex space-x-3">
-                    <button id="confirmAdminLogin" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-blue-800">確認</button>
-                    <button onclick="closeAdminModal()" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg transition-all duration-200 active:scale-95 active:bg-gray-600">取消</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- 送單成功彈窗 -->
-        <div id="submitSuccessModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
-            <div class="bg-white rounded-lg p-6 w-full max-w-sm shadow-lg text-center">
-                <h3 class="text-xl font-bold text-green-600 mb-4">✅ 提交成功</h3>
-                <p class="text-gray-700 mb-6">您的申請已成功送出！可至「查看狀態」追蹤進度。</p>
-                <button onclick="document.getElementById('submitSuccessModal').classList.add('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg">確定</button>
-            </div>
-        </div>
+        </main>
+        
     </div>
 
-<script>
-    // === 全域變數與 DOM 元素 ===
-    const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbysuWgSnCNUI69Gg-XgqiiKtiWXiDscUK7m6dqFQvTkl_cncon7w2dgf75SWW8kyHhpHA/exec';
+    <!-- 頁尾 -->
+    <footer class="text-center py-6 text-sm text-gray-500">
+        <p>&copy; 奇美醫療財團法人奇美醫院 臨床技能中心</p>
+    </footer>
 
-    const form = document.getElementById('equipmentForm');
-    const applyBtn = document.getElementById('applyBtn');
-    const statusBtn = document.getElementById('statusBtn');
-    const adminLoginBtn = document.getElementById('adminLoginBtn');
-    const confirmAdminLogin = document.getElementById('confirmAdminLogin');
-    const adminModal = document.getElementById('adminModal');
-    const adminInfo = document.getElementById('admin-info');
-    const adminPasswordInput = document.getElementById('adminPassword');
-    const applicationForm = document.getElementById('applicationForm');
-    const statusView = document.getElementById('statusView');
-    const successMessage = document.getElementById('successMessage');
-    const errorMessage = document.getElementById('errorMessage');
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const togglePasswordVisibility = document.getElementById('togglePasswordVisibility');
-    const eyeOpen = document.getElementById('eye-open');
-    const eyeClosed = document.getElementById('eye-closed');
-    const yearFilter = document.getElementById('yearFilter');
-    const statsCount = document.getElementById('statsCount');
-    const submitSuccessModal = document.getElementById('submitSuccessModal');
-
-    let currentView = 'apply';
-    let isAdmin = false;
-    let allApplications = [];
-    let statusUpdateInFlight = false; // 防重複送出
-
-    // 狀態設定
-    const statusOptions = [
-        { value: '已提交', label: '已提交', color: 'bg-blue-100 text-blue-800' },
-        { value: '已收件', label: '已收件', color: 'bg-yellow-100 text-yellow-800' },
-        { value: '審核中', label: '審核中', color: 'bg-orange-100 text-orange-800' },
-        { value: '已核准', label: '已核准', color: 'bg-green-100 text-green-800' },
-        { value: '已駁回', label: '已駁回', color: 'bg-red-100 text-red-800' },
-        { value: '已完成', label: '已完成', color: 'bg-purple-100 text-purple-800' }
-    ];
-
-    const progressSteps = [
-        { key: '已提交', label: '申請中', icon: '📝' },
-        { key: '已收件', label: '中心收件', icon: '📨' },
-        { key: '已核准', label: '請購中', icon: '📋' },
-        { key: '已完成', label: '已送達', icon: '✅' }
-    ];
-
-    // 視圖切換
-    function showView(view) {
-        currentView = view;
-        if (view === 'apply') {
-            applicationForm.classList.remove('hidden');
-            statusView.classList.add('hidden');
-            applyBtn.className = 'bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
-            statusBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
-        } else {
-            applicationForm.classList.add('hidden');
-            statusView.classList.remove('hidden');
-            applyBtn.className = 'bg-gray-200 hover:bg-gray-300 text-gray-700 px-6 py-3 rounded-lg font-medium transition-colors';
-            statusBtn.className = 'bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-medium transition-colors';
-            if(allApplications.length === 0) fetchAndDisplayApplications();
-        }
-    }
-
-    // 表單提交
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const submitButton = e.target.querySelector('button[type="submit"]');
-        submitButton.disabled = true;
-        submitButton.textContent = '提交中...';
-
-        const formData = {
-            action: 'submit_form',
-            department: document.getElementById('department').value,
-            applicant: document.getElementById('applicant').value,
-            position: document.getElementById('position').value,
-            contact: document.getElementById('contact').value,
-            email: document.getElementById('email').value,
-            equipmentSpec: document.getElementById('equipmentSpec').value,
-            quantity: document.getElementById('quantity').value,
-            frequency: document.getElementById('frequency').value,
-            expectedBenefit: document.getElementById('expectedBenefit').value,
-            targetAudience: document.getElementById('targetAudience').value,
-            attachments: document.getElementById('attachments').files[0]?.name || '無'
-        };
-
-        try {
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'cors',
-                cache: 'no-cache',
-                // 不設 Content-Type → 簡單請求，避免 CORS 預檢
-                body: JSON.stringify(formData)
-            });
-
-            if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
-            const result = await response.json();
-
-            if (result.result === 'success') {
-                showMessage(successMessage, '申請已成功送出！');
-                submitSuccessModal.classList.remove('hidden'); // 彈窗顯示
-                form.reset();
-                allApplications = [];
-            } else {
-                throw new Error(result.message || '後端回報未知錯誤');
-            }
-        } catch (error) {
-            console.error('提交錯誤:', error);
-            showMessage(errorMessage, `提交失敗：${error.message}`);
-        } finally {
-            submitButton.disabled = false;
-            submitButton.innerHTML = '🚀 提交申請';
-        }
-    });
-
-    // 年度篩選 & 統計
-    function populateYearFilter() {
-        if (!allApplications || allApplications.length === 0) {
-            yearFilter.innerHTML = `<option value="${new Date().getFullYear()}">${new Date().getFullYear()}</option>`;
-            return;
-        }
-        const years = [...new Set(allApplications.map(app => new Date(app['時間戳記']).getFullYear()))].sort((a,b)=>b-a);
-        const prev = yearFilter.value;
-        yearFilter.innerHTML = '<option value="all">所有年度</option>';
-        years.forEach(year => {
-            const opt = document.createElement('option');
-            opt.value = year; opt.textContent = year;
-            yearFilter.appendChild(opt);
-        });
-        if (prev) yearFilter.value = prev;
-    }
-
-    function updateStatistics() {
-        const selectedYear = yearFilter.value;
-        const countLabel = statsCount.previousElementSibling;
-        let count = 0;
-        if (selectedYear === 'all') {
-            count = allApplications.length;
-            countLabel.textContent = '所有申請總件數';
-        } else {
-            const year = parseInt(selectedYear, 10);
-            count = allApplications.filter(app => new Date(app['時間戳記']).getFullYear() === year).length;
-            countLabel.textContent = '該年度申請件數';
-        }
-        statsCount.textContent = `${count} 件`;
-    }
-
-    // 取得 & 顯示申請資料
-    async function fetchAndDisplayApplications() {
-        const listContainer = document.getElementById('applicationsList');
-        listContainer.innerHTML = `<div class="text-center py-12 text-gray-500">📄 正在加載資料...</div>`;
-        try {
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, { method: 'GET', mode: 'cors', cache: 'no-cache' });
-            if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
-            const result = await response.json();
-            if (result.result === 'success') {
-                allApplications = result.data;
-                populateYearFilter();
-                displayApplications();
-                updateStatistics();
-            } else {
-                throw new Error(result.message);
-            }
-        } catch (error) {
-            console.error('獲取資料錯誤:', error);
-            listContainer.innerHTML = `<div class="text-center py-12 text-red-500">❌ 無法加載申請資料：${error.message}</div>`;
-        }
-    }
-
-    // 列表呈現
-    function displayApplications() {
-        const searchTerm = searchInput.value;
-        const selectedYear = yearFilter.value;
-        let appsToDisplay = allApplications;
-
-        if (selectedYear !== 'all') {
-            const year = parseInt(selectedYear, 10);
-            appsToDisplay = appsToDisplay.filter(app => new Date(app['時間戳記']).getFullYear() === year);
-        }
-        if (searchTerm) {
-            const lower = searchTerm.toLowerCase();
-            appsToDisplay = appsToDisplay.filter(app =>
-                (app['申請人'] && String(app['申請人']).toLowerCase().includes(lower)) ||
-                (app['教具品名規格'] && String(app['教具品名規格']).toLowerCase().includes(lower))
-            );
-        }
-
-        const container = document.getElementById('applicationsList');
-        if (!appsToDisplay || appsToDisplay.length === 0) {
-            container.innerHTML = `<div class="text-center py-12 text-gray-500"><div class="text-6xl mb-4">📋</div><p class="text-lg">目前沒有符合條件的申請記錄</p></div>`;
-            return;
-        }
-
-        container.innerHTML = appsToDisplay.map(app => {
-            const statusInfo = statusOptions.find(s => s.label === app['狀態']) || { color: 'bg-gray-100 text-gray-800', label: app['狀態'] || '未知' };
-            const getCurrentStepIndex = (status) => {
-                switch (status) {
-                    case '已提交': return 0;
-                    case '已收件': return 1;
-                    case '審核中': case '已核准': return 2;
-                    case '已完成': return 3;
-                    default: return -1;
-                }
-            };
-            const currentStepIndex = getCurrentStepIndex(app['狀態']);
-            let progressBarHtml;
-
-            if (app['狀態'] === '已駁回') {
-                progressBarHtml = `<div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-4"><div class="flex items-center text-red-600"><span class="text-2xl mr-3">❌</span><span class="font-medium">申請已被駁回</span></div></div>`;
-            } else {
-                let statusHistory = {};
-                try {
-                    if (typeof app['狀態歷史紀錄'] === 'string' && app['狀態歷史紀錄'].trim().startsWith('{')) {
-                        statusHistory = JSON.parse(app['狀態歷史紀錄']);
-                    }
-                } catch (e) {}
-                progressBarHtml = `<div class="bg-gray-50 rounded-lg p-4 mb-4"><div class="flex items-center justify-between relative">${
-                    progressSteps.map((step, index) => {
-                        const isCompleted = index <= currentStepIndex;
-                        const isCurrent = index === currentStepIndex;
-                        const date = statusHistory[step.key] || '';
-                        return `<div class="flex flex-col items-center relative z-10 w-1/4">
-                                    <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg mb-2 transition-all duration-300 ${
-                                        isCompleted ? (isCurrent ? 'bg-blue-500 text-white shadow-lg' : 'bg-green-500 text-white') : 'bg-gray-200 text-gray-400'
-                                    }">${step.icon}</div>
-                                    <span class="text-sm font-medium text-center ${isCompleted ? 'text-gray-800' : 'text-gray-400'}">${step.label}</span>
-                                    <span class="text-xs text-gray-500 mt-1">${date}</span>
-                                    ${isCurrent ? '<div class="absolute -bottom-2 w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>' : ''}
-                                </div>${index < progressSteps.length - 1 ? `<div class="flex-1 h-1 mx-4 rounded-full ${index < currentStepIndex ? 'bg-green-400' : 'bg-gray-200'} transition-all duration-300"></div>` : ''}`;
-                    }).join('')
-                }</div></div>`;
-            }
-
-            const updateBtnHtml = isAdmin ? `<button onclick="changeStatus('${app.id}', '${app['狀態']}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">更新狀態</button>` : '';
-
-            return `<div class="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-                        <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-4">
-                            <div class="flex items-center space-x-4 mb-2 lg:mb-0">
-                                <h3 class="text-lg font-semibold text-gray-800">${app.id}</h3>
-                                <span class="px-3 py-1 rounded-full text-sm font-medium ${statusInfo.color}">${statusInfo.label}</span>
-                            </div>
-                            <div class="flex space-x-2">
-                                ${updateBtnHtml}
-                                <button onclick="viewDetails('${app.id}')" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg text-sm transition-colors">查看詳情</button>
-                            </div>
-                        </div>
-                        ${progressBarHtml}
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-                            <div><span class="font-medium text-gray-600">申請人：</span><span class="text-gray-800">${app['申請人'] || ''}</span></div>
-                            <div><span class="font-medium text-gray-600">申請單位：</span><span class="text-gray-800">${app['申請單位'] || ''}</span></div>
-                            <div><span class="font-medium text-gray-600">提交日期：</span><span class="text-gray-800">${new Date(app['時間戳記']).toLocaleString()}</span></div>
-                        </div>
-                        <div class="mt-3"><span class="font-medium text-gray-600">教具：</span><span class="text-gray-800">${String(app['教具品名規格'] || '').substring(0, 100)}${String(app['教具品名規格'] || '').length > 100 ? '...' : ''}</span></div>
-                    </div>`;
-        }).join('');
-    }
-
-    // 模態關閉
-    function closeModal(id){ const modal = document.getElementById(id); if (modal) modal.remove(); }
-    function closeAdminModal(){ if (adminModal) adminModal.classList.add('hidden'); }
-
-    // 詳情
-    window.viewDetails = function(appId){
-        const app = allApplications.find(a => a.id === appId);
-        if (!app) { showMessage(errorMessage, `在快取中找不到申請編號：${appId}`); return; }
-        const modal = document.createElement('div');
-        modal.id = 'detailsModal';
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-        modal.innerHTML = `<div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-semibold">申請詳情</h3>
-                <button onclick="closeModal('detailsModal')" class="text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
-            </div>
-            <div class="space-y-4">
-                <div class="grid grid-cols-2 gap-4 text-sm">
-                    <div><strong>申請編號：</strong>${app.id||'N/A'}</div>
-                    <div><strong>狀態：</strong>${app['狀態']||'N/A'}</div>
-                    <div><strong>申請人：</strong>${app['申請人']||'N/A'}</div>
-                    <div><strong>申請單位：</strong>${app['申請單位']||'N/A'}</div>
-                    <div><strong>職稱：</strong>${app['職稱']||'N/A'}</div>
-                    <div><strong>聯繫方式：</strong>${app['聯繫方式']||'N/A'}</div>
-                    <div class="col-span-2"><strong>信箱：</strong>${app['信箱']||'N/A'}</div>
-                    <div class="col-span-2"><strong>教具規格：</strong><pre class="whitespace-pre-wrap font-sans">${app['教具品名規格']||'N/A'}</pre></div>
-                    <div><strong>申請數量：</strong>${app['申請數量']||'N/A'}</div>
-                    <div><strong>教學頻率：</strong>${app['教學頻率']||'N/A'}</div>
-                    <div class="col-span-2"><strong>教學對象：</strong>${app['教學對象']||'N/A'}</div>
-                    <div class="col-span-2"><strong>預期效益：</strong><pre class="whitespace-pre-wrap font-sans">${app['預期效益']||'N/A'}</pre></div>
-                    <div class="col-span-2"><strong>附件：</strong>${app['附件']||'N/A'}</div>
-                    <div><strong>提交日期：</strong>${new Date(app['時間戳記']).toLocaleString()||'N/A'}</div>
-                </div>
-            </div>
-        </div>`;
-        modal.onclick = () => closeModal('detailsModal');
-        document.body.appendChild(modal);
-    };
-
-    // 狀態更新（防連點 + disable 按鈕）
-    window.changeStatus = function(appId, currentStatus){
-        if (!isAdmin) { showMessage(errorMessage, '您沒有管理權限'); return; }
-        const modal = document.createElement('div');
-        modal.id = 'statusModal';
-        modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
-        const statusDropdown = statusOptions.map(o => `<option value="${o.value}" ${o.value===currentStatus?'selected':''}>${o.label}</option>`).join('');
-        modal.innerHTML = `<div class="bg-white rounded-lg p-6 w-full max-w-md mx-4 shadow-lg" onclick="event.stopPropagation()">
-            <h3 class="text-xl font-semibold mb-4">更新申請狀態</h3>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">申請編號：${appId}</label>
-                <select id="newStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg">${statusDropdown}</select>
-            </div>
-            <div class="flex space-x-3">
-                <button id="updateStatusBtn" onclick="updateStatus('${appId}')" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg">更新</button>
-                <button onclick="closeModal('statusModal')" class="flex-1 bg-gray-400 hover:bg-gray-500 text-white py-2 rounded-lg">取消</button>
-            </div>
-        </div>`;
-        modal.onclick = () => closeModal('statusModal');
-        document.body.appendChild(modal);
-    };
-
-    window.updateStatus = async function(appId){
-        if (statusUpdateInFlight) return; // 已在送出就忽略
-        statusUpdateInFlight = true;
-
-        const btn = document.getElementById('updateStatusBtn');
-        if (btn) { btn.disabled = true; btn.textContent = '更新中…'; }
-
-        const newStatus = document.getElementById('newStatus').value;
-        try{
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify({ action:'update_status', id: appId, newStatus })
-            });
-            const result = await response.json();
-            if (result.result === 'success') {
-                showMessage(successMessage, '狀態更新成功');
-                closeModal('statusModal');
-                allApplications = [];
-                fetchAndDisplayApplications();
-            } else { throw new Error(result.message); }
-        } catch (error) {
-            showMessage(errorMessage, `狀態更新失敗：${error.message}`);
-        } finally {
-            statusUpdateInFlight = false;
-            if (btn) { btn.disabled = false; btn.textContent = '更新'; }
-        }
-    };
-
-    // 管理者登入
-    adminLoginBtn.addEventListener('click', () => { adminModal.classList.remove('hidden'); adminPasswordInput.focus(); });
-
-    confirmAdminLogin.addEventListener('click', async () => {
-        const password = adminPasswordInput.value;
-        if (!password) { showMessage(errorMessage, '請輸入密碼'); return; }
-        // 防連點
-        confirmAdminLogin.disabled = true;
-        const originalText = confirmAdminLogin.textContent;
-        confirmAdminLogin.textContent = '驗證中…';
-
-        try{
-            const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
-                method: 'POST',
-                mode: 'cors',
-                body: JSON.stringify({ action:'verify_password', password })
-            });
-            const result = await response.json();
-            if (result.result === 'success' && result.is_admin) {
-                isAdmin = true;
-                adminLoginBtn.style.display = 'none';
-                adminInfo.classList.remove('hidden');
-                closeAdminModal();
-                showMessage(successMessage, '管理員登入成功');
-                if (currentView === 'status') displayApplications();
-            } else { throw new Error(result.message || '密碼錯誤'); }
-        } catch (error) {
-            showMessage(errorMessage, `登入失敗：${error.message}`);
-        } finally {
-            confirmAdminLogin.disabled = false;
-            confirmAdminLogin.textContent = originalText;
-            adminPasswordInput.value = '';
-        }
-    });
-
-    togglePasswordVisibility.addEventListener('click', () => {
-        const isPassword = adminPasswordInput.type === 'password';
-        adminPasswordInput.type = isPassword ? 'text' : 'password';
-        eyeOpen.classList.toggle('hidden', !isPassword);
-        eyeClosed.classList.toggle('hidden', isPassword);
-    });
-
-    adminPasswordInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') { e.preventDefault(); confirmAdminLogin.click(); }
-    });
-
-    function showMessage(element, message) {
-        element.textContent = message;
-        element.classList.remove('hidden');
-        element.classList.add('fade-in');
-        setTimeout(() => { element.classList.add('hidden'); element.classList.remove('fade-in'); }, 4000);
-    }
-
-    // 事件
-    applyBtn.addEventListener('click', () => showView('apply'));
-    statusBtn.addEventListener('click', () => showView('status'));
-    yearFilter.addEventListener('change', () => { displayApplications(); updateStatistics(); });
-    searchBtn.addEventListener('click', () => { displayApplications(); updateStatistics(); });
-    searchInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') { displayApplications(); updateStatistics(); } });
-
-    // 初始
-    showView('apply');
-</script>
 </body>
 </html>
+
