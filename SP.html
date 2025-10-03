@@ -5,77 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>奇美醫院標準化病人申請作業系統</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* 使用 Noto Sans TC 作為預設字體 */
-        body {
-            font-family: 'Noto Sans TC', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
-        }
-        /* 隱藏/顯示 Tab 內容的樣式 */
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        /* 簡易轉場效果 */
-        .modal {
-            transition: opacity 0.3s ease;
-        }
-        /* 進度條樣式 */
-        .progress-step {
-            transition: all 0.3s ease;
-        }
-        .progress-line {
-            transition: all 0.3s ease;
-        }
-        /* 當前進度閃爍外框動畫 */
-        @keyframes blinking-border {
-            0% { box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.7); } /* blue-500 */
-            50% { box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.7); } /* blue-300 */
-            100% { box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.7); }
-        }
-        .blinking-shadow {
-            animation: blinking-border 1.5s infinite;
-        }
-
-        /* 讀取中 spinner 樣式 */
+        body { font-family: 'Noto Sans TC', sans-serif; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
         .loader {
-            border: 4px solid #f3f3f3; /* Light grey */
-            border-top: 4px solid #3498db; /* Blue */
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
             border-radius: 50%;
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         .loading-overlay {
-            position: absolute;
-            inset: 0;
-            background-color: rgba(255, 255, 255, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
+            position: absolute; inset: 0; background-color: rgba(255, 255, 255, 0.7);
+            display: flex; align-items: center; justify-content: center; z-index: 10;
         }
     </style>
 </head>
 <body class="bg-gray-50">
-
     <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-7xl relative">
-
-        <div class="absolute top-4 right-4 sm:top-6 sm:right-6">
-            <button id="admin-login-btn" class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 font-medium rounded-lg text-sm px-4 py-2 text-center shadow-sm transition">
-                管理員登入
-            </button>
-        </div>
-
         <header class="text-center pt-8 mb-8">
             <h1 class="text-3xl md:text-4xl font-bold text-gray-800 tracking-wide">奇美醫院標準化病人申請作業系統</h1>
         </header>
@@ -96,322 +47,87 @@
                 <form id="sp-application-form">
                     <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
                         <div class="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm border border-gray-200 h-fit">
-                            <div class="flex items-center gap-3 mb-6">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                                </div>
-                                <h2 class="text-xl font-bold text-gray-700">一、基本資料</h2>
-                            </div>
+                            <div class="flex items-center gap-3 mb-6"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg></div><h2 class="text-xl font-bold text-gray-700">一、基本資料</h2></div>
                             <div class="space-y-6">
-                                <div>
-                                    <label for="department" class="block mb-2 text-sm font-medium text-gray-900">申請單位</label>
-                                    <input type="text" id="department" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="例如：內科部" required>
-                                </div>
-                                <div>
-                                    <label for="applicant" class="block mb-2 text-sm font-medium text-gray-900">申請人</label>
-                                    <input type="text" id="applicant" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="王大明" required>
-                                </div>
-                                <div>
-                                    <label for="phone" class="block mb-2 text-sm font-medium text-gray-900">連絡電話</label>
-                                    <input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="0912-345-678 或 分機 12345" required>
-                                </div>
-                                <div>
-                                    <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label>
-                                    <input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="example@chimei.org.tw" required>
-                                </div>
-                                <div>
-                                    <label for="reason" class="block mb-2 text-sm font-medium text-gray-900">申請標準化病人原因</label>
-                                    <textarea id="reason" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="請簡述本次申請原因，例如：PGY OSCE 測驗" required></textarea>
-                                </div>
+                                <div><label for="department" class="block mb-2 text-sm font-medium text-gray-900">申請單位</label><input type="text" id="department" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="例如：內科部" required></div>
+                                <div><label for="applicant" class="block mb-2 text-sm font-medium text-gray-900">申請人</label><input type="text" id="applicant" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="王大明" required></div>
+                                <div><label for="phone" class="block mb-2 text-sm font-medium text-gray-900">連絡電話</label><input type="tel" id="phone" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="0912-345-678 或 分機 12345" required></div>
+                                <div><label for="email" class="block mb-2 text-sm font-medium text-gray-900">Email</label><input type="email" id="email" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="example@chimei.org.tw" required></div>
+                                <div><label for="reason" class="block mb-2 text-sm font-medium text-gray-900">申請標準化病人原因</label><textarea id="reason" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500" placeholder="請簡述本次申請原因，例如：PGY OSCE 測驗" required></textarea></div>
                             </div>
                         </div>
                         <div class="lg:col-span-3 bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                             <div class="flex items-center gap-3 mb-6">
-                                <div class="flex-shrink-0 w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center">
-                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-                                </div>
-                                <h2 class="text-xl font-bold text-gray-700">二、標準化病人申請資料</h2>
-                            </div>
+                             <div class="flex items-center gap-3 mb-6"><div class="flex-shrink-0 w-10 h-10 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg></div><h2 class="text-xl font-bold text-gray-700">二、標準化病人申請資料</h2></div>
                             <div class="space-y-6">
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <div>
-                                        <label for="performance-date" class="block mb-2 text-sm font-medium text-gray-900">預計演出日期</label>
-                                        <input type="date" id="performance-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                                    </div>
-                                    <div class="flex items-end gap-2">
-                                        <div class="flex-1">
-                                            <label for="start-time" class="block mb-2 text-sm font-medium text-gray-900">演出開始時間</label>
-                                            <input type="time" id="start-time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                                        </div>
-                                        <span class="text-gray-500 pb-2.5">至</span>
-                                        <div class="flex-1">
-                                            <label for="end-time" class="block mb-2 text-sm font-medium text-gray-900">演出結束時間</label>
-                                            <input type="time" id="end-time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="location" class="block mb-2 text-sm font-medium text-gray-900">演出地點</label>
-                                        <input type="text" id="location" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="臨床技能中心" required>
-                                    </div>
-                                     <div>
-                                        <label for="audience" class="block mb-2 text-sm font-medium text-gray-900">測驗對象</label>
-                                        <input type="text" id="audience" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="例如：PGY、UGY" required>
-                                    </div>
+                                    <div><label for="performance-date" class="block mb-2 text-sm font-medium text-gray-900">預計演出日期</label><input type="date" id="performance-date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required></div>
+                                    <div class="flex items-end gap-2"><div class="flex-1"><label for="start-time" class="block mb-2 text-sm font-medium text-gray-900">演出開始時間</label><input type="time" id="start-time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required></div><span class="text-gray-500 pb-2.5">至</span><div class="flex-1"><label for="end-time" class="block mb-2 text-sm font-medium text-gray-900">演出結束時間</label><input type="time" id="end-time" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" required></div></div>
+                                    <div><label for="location" class="block mb-2 text-sm font-medium text-gray-900">演出地點</label><input type="text" id="location" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="臨床技能中心" required></div>
+                                    <div><label for="audience" class="block mb-2 text-sm font-medium text-gray-900">測驗對象</label><input type="text" id="audience" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="例如：PGY、UGY" required></div>
                                 </div>
-                                
                                 <div>
                                     <label class="block mb-2 text-sm font-medium text-gray-900">標準化病人需求數</label>
-                                    <div id="sp-requirements-container" class="space-y-4">
-                                        </div>
-                                    <button type="button" id="add-sp-requirement" class="mt-4 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                                        增列一位標病條件
-                                    </button>
-                                </div>
-                                
-                                <div>
-                                    <label class="block mb-2 text-sm font-medium text-gray-900">檔案上傳 (教案或時程表)</label>
-                                    <div class="flex items-center gap-4 mt-2">
-                                         <label class="cursor-pointer text-white bg-gray-600 hover:bg-gray-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
-                                            選擇檔案
-                                            <input type="file" id="file-upload" class="hidden">
-                                        </label>
-                                        <span id="file-name" class="text-sm text-gray-500">尚未選擇檔案</span>
-                                    </div>
-                                    <p class="mt-1 text-xs text-gray-500">注意：此為介面展示，檔案並不會實際儲存。</p>
+                                    <div id="sp-requirements-container" class="space-y-4"></div>
+                                    <button type="button" id="add-sp-requirement" class="mt-4 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center flex items-center"><svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>增列一位標病條件</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="flex justify-end mt-8">
-                        <button type="submit" id="submit-btn" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-8 py-3 text-center inline-flex items-center gap-2 disabled:bg-gray-400">
-                            送出申請
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>
-                        </button>
+                        <button type="submit" id="submit-btn" class="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-8 py-3 text-center inline-flex items-center gap-2 disabled:bg-gray-400">送出申請<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg></button>
                     </div>
                 </form>
             </div>
-
             <div class="tab-content p-4" id="status" role="tabpanel" aria-labelledby="status-tab">
-                <div class="bg-white p-6 rounded-lg shadow-md relative min-h-[300px]">
-                     <div id="loading-overlay" class="loading-overlay hidden">
-                        <div class="loader"></div>
+                 <div class="bg-white p-6 rounded-lg shadow-md relative min-h-[300px]">
+                    <div id="loading-overlay" class="loading-overlay hidden"><div class="loader"></div></div>
+                    <h2 class="text-2xl font-semibold text-gray-700 mb-4">查詢您的申請紀錄</h2>
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <input type="text" id="search-input" class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="請輸入申請單號、單位或申請人姓名查詢...">
+                        <button id="search-btn" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-2.5">查詢</button>
                     </div>
-
-                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
-                        <h2 class="text-2xl font-semibold text-gray-700 mb-2 sm:mb-0">查詢您的申請紀錄</h2>
-                        <div class="flex items-center gap-2">
-                            <label for="year-filter" class="text-sm font-medium text-gray-700">年度:</label>
-                             <select id="year-filter" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2"></select>
-                        </div>
-                     </div>
-                     <p id="application-count" class="text-lg font-semibold text-gray-600 mb-6"></p>
-                     <div class="flex flex-col md:flex-row gap-4 mb-6">
-                         <input type="text" id="search-input" class="flex-grow bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder="請輸入申請單號、單位或申請人姓名查詢...">
-                         <button id="search-btn" class="text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-6 py-2.5">查詢</button>
-                     </div>
-                     <div class="relative overflow-x-auto">
-                         <table class="w-full text-sm text-left text-gray-500">
-                             <thead class="text-xs text-gray-700 uppercase bg-gray-100">
-                                 <tr>
-                                     <th scope="col" class="px-6 py-3">申請單號</th>
-                                     <th scope="col" class="px-6 py-3">申請人</th>
-                                     <th scope="col" class="px-6 py-3">演出日期</th>
-                                     <th scope="col" class="px-6 py-3 min-w-[420px]">進度</th>
-                                     <th scope="col" class="px-6 py-3">操作</th>
-                                 </tr>
-                             </thead>
-                             <tbody id="status-table-body">
-                                 </tbody>
-                         </table>
-                     </div>
+                    <div class="relative overflow-x-auto">
+                        <table class="w-full text-sm text-left text-gray-500">
+                            <thead class="text-xs text-gray-700 uppercase bg-gray-100"><tr><th scope="col" class="px-6 py-3">申請單號</th><th scope="col" class="px-6 py-3">申請人</th><th scope="col" class="px-6 py-3">演出日期</th><th scope="col" class="px-6 py-3">進度</th><th scope="col" class="px-6 py-3">操作</th></tr></thead>
+                            <tbody id="status-table-body"></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
     <footer class="text-center py-6 text-sm text-gray-500 mt-8">
         <p>&copy; 奇美醫療財團法人奇美醫院 臨床技能中心</p>
     </footer>
 
     <script>
-        // ★★★ 修改處：已刪除所有用於模擬/測試的 google.script.run 物件 ★★★
-        
         function initializeAppLogic() {
-            // --- 狀態管理 ---
-            let isAdminLoggedIn = false;
-            let editingAppId = null;
-            let allApplications = [];
-
-            // --- DOM 元素 ---
-            const adminLoginBtn = document.getElementById('admin-login-btn');
-            const statusTableBody = document.getElementById('status-table-body');
-            const searchInput = document.getElementById('search-input');
-            const searchBtn = document.getElementById('search-btn');
-            const applicationCountEl = document.getElementById('application-count');
-            const yearFilter = document.getElementById('year-filter');
-            const loadingOverlay = document.getElementById('loading-overlay');
             const submitBtn = document.getElementById('submit-btn');
-            const fileUploadInput = document.getElementById('file-upload');
-            const fileNameSpan = document.getElementById('file-name');
             const container = document.getElementById('sp-requirements-container');
             const addButton = document.getElementById('add-sp-requirement');
             const form = document.getElementById('sp-application-form');
             let spCount = 0;
-            
-            // --- 函數 ---
-            function showLoader(show) {
-                loadingOverlay.classList.toggle('hidden', !show);
-            }
-
-            function fetchApplications() {
-                showLoader(true);
-                // 這會呼叫真實的後端 GAS function
-                google.script.run
-                    .withSuccessHandler(response => {
-                        if (response.success) {
-                            allApplications = response.data;
-                            populateYearFilter();
-                            updateDisplay();
-                        } else {
-                            alert("讀取申請資料失敗: " + response.message);
-                        }
-                        showLoader(false);
-                    })
-                    .withFailureHandler(err => {
-                        alert("讀取資料時發生錯誤: " + err);
-                        showLoader(false);
-                    })
-                    .getApplications(null); // 傳入 null 表示獲取所有資料
-            }
-
-            function populateYearFilter() {
-                const years = [...new Set(allApplications.map(item => item.activityDate.substring(0, 4)))].sort((a, b) => b - a);
-                const currentYear = new Date().getFullYear().toString();
-                if (!years.includes(currentYear)) {
-                    years.unshift(currentYear);
-                }
-                yearFilter.innerHTML = '';
-                years.forEach(year => {
-                    const option = document.createElement('option');
-                    option.value = year;
-                    option.textContent = `${year}年`;
-                    yearFilter.appendChild(option);
-                });
-            }
-
-            function updateDisplay() {
-                const selectedYear = yearFilter.value;
-                const query = searchInput.value.toLowerCase().trim();
-
-                let displayData = allApplications.filter(item => item.activityDate.startsWith(selectedYear));
-                applicationCountEl.innerHTML = `${selectedYear}年度 總案件數：<span class="text-blue-600 font-bold text-xl">${displayData.length}</span> 件`;
-
-                if (query) {
-                    displayData = displayData.filter(item => 
-                        (item.id && item.id.toLowerCase().includes(query)) || 
-                        (item.applicantName && item.applicantName.toLowerCase().includes(query)) ||
-                        (item.unit && item.unit.toLowerCase().includes(query))
-                    );
-                }
-                renderStatusTable(displayData);
-            }
-            
-            function renderStatusTable(data) {
-                statusTableBody.innerHTML = '';
-                if (!data || data.length === 0) {
-                    statusTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">查無資料</td></tr>`;
-                    return;
-                }
-
-                // 確保排序欄位存在
-                data.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
-                
-                data.forEach(item => {
-                    const row = document.createElement('tr');
-                    row.className = 'bg-white border-b hover:bg-gray-50';
-                    row.innerHTML = `
-                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">${item.id || ''}</th>
-                        <td class="px-6 py-4">${item.unit || ''} - ${item.applicantName || ''}</td>
-                        <td class="px-6 py-4">${item.activityDate || ''}</td>
-                        <td class="px-6 py-4">${createProgressBar(item.status)}</td>
-                        <td class="px-6 py-4">
-                            <button data-id="${item.id}" class="details-btn font-medium text-blue-600 hover:underline">詳情</button>
-                            ${isAdminLoggedIn ? `<button data-id="${item.id}" class="edit-status-btn ml-4 font-medium text-green-600 hover:underline">編輯</button>` : ''}
-                        </td>
-                    `;
-                    statusTableBody.appendChild(row);
-                });
-            }
-            
-            function createProgressBar(currentStatusKey) {
-                const statusMap = {
-                    '已送單': { index: 0, text: '已送單', color: 'bg-gray-400' },
-                    '中心收件': { index: 1, text: '中心收件', color: 'bg-sky-500' },
-                    '安排中': { index: 2, text: '安排中', color: 'bg-amber-500' },
-                    '已完成': { index: 3, text: '已完成', color: 'bg-green-500' },
-                    '演出取消': { index: 4, text: '演出取消', color: 'bg-red-500' }
-                };
-                // 簡易版的進度顯示，您可以根據需要擴充
-                const statusInfo = statusMap[currentStatusKey] || {text: currentStatusKey, color: 'bg-gray-400'};
-                return `<span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${statusInfo.color} text-white">${statusInfo.text}</span>`;
-            }
 
             function addSpRequirement() {
                 spCount++;
                 const requirementDiv = document.createElement('div');
-                requirementDiv.className = 'p-4 border border-gray-200 rounded-lg grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 items-end relative';
-                requirementDiv.innerHTML = `<div class="font-semibold text-gray-600 sm:col-span-3 md:col-span-4">標病 ${spCount}</div><div><label class="block mb-1 text-xs font-medium text-gray-700">性別</label><select class="sp-gender bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"><option selected value="">請選擇</option><option value="男">男</option><option value="女">女</option><option value="不拘">不拘</option></select></div><div><label class="block mb-1 text-xs font-medium text-gray-700">年齡</label><input type="text" class="sp-age bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" placeholder="例如：40-50歲"></div><div class="sm:col-span-2 md:col-span-1"><label class="block mb-1 text-xs font-medium text-gray-700">演出教案/條件</label><input type="text" class="sp-condition bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" placeholder="例如：腹痛教案、需能哭"></div><div class="sm:col-start-3 md:col-start-4"><button type="button" class="remove-sp-requirement w-full text-red-600 hover:text-white border border-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center">移除</button></div>`;
+                requirementDiv.className = 'p-4 border border-gray-200 rounded-lg grid grid-cols-1 sm:grid-cols-3 gap-4 items-end relative';
+                requirementDiv.innerHTML = `<div class="font-semibold text-gray-600 sm:col-span-3">標病 ${spCount}</div><div><label class="block mb-1 text-xs font-medium text-gray-700">性別</label><select class="sp-gender bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2"><option selected value="">請選擇</option><option value="男">男</option><option value="女">女</option><option value="不拘">不拘</option></select></div><div><label class="block mb-1 text-xs font-medium text-gray-700">年齡</label><input type="text" class="sp-age bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" placeholder="例如：40-50歲"></div><div><label class="block mb-1 text-xs font-medium text-gray-700">演出教案/條件</label><input type="text" class="sp-condition bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2" placeholder="例如：腹痛教案"></div><button type="button" class="remove-sp-requirement absolute top-2 right-2 text-gray-400 hover:text-red-500">&times;</button>`;
                 container.appendChild(requirementDiv);
-                updateSpHeaders();
             }
-            
-            function updateSpHeaders() {
-                 const allSpHeaders = container.querySelectorAll('.font-semibold');
-                 allSpHeaders.forEach((header, index) => { header.textContent = `標病 ${index + 1}`; });
-                 spCount = allSpHeaders.length;
-            }
-
-            // --- 事件監聽 ---
-            const tabs = document.querySelectorAll('#myTab button');
-            const tabContents = document.querySelectorAll('#myTabContent .tab-content');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function () {
-                    tabs.forEach(t => {
-                        t.classList.remove('text-blue-600', 'border-blue-600');
-                        t.setAttribute('aria-selected', 'false');
-                    });
-                    tabContents.forEach(content => content.classList.remove('active'));
-                    this.classList.add('text-blue-600', 'border-blue-600');
-                    this.setAttribute('aria-selected', 'true');
-                    document.getElementById(this.getAttribute('aria-controls')).classList.add('active');
-
-                    // 當切換到查詢分頁時，自動載入資料
-                    if (this.id === 'status-tab') {
-                        fetchApplications();
-                    }
-                });
-            });
-
             addSpRequirement();
             addButton.addEventListener('click', addSpRequirement);
-            
             container.addEventListener('click', function(e) {
-                if (e.target.closest('.remove-sp-requirement')) {
-                    if (container.querySelectorAll('.p-4').length > 1) {
-                         e.target.closest('.p-4').remove();
-                         updateSpHeaders();
-                    } else {
-                        alert("至少需保留一項標病需求。");
-                    }
+                if (e.target.classList.contains('remove-sp-requirement')) {
+                    if (container.children.length > 1) e.target.parentElement.remove();
+                    else alert("至少需保留一項標病需求。");
                 }
             });
-            
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 submitBtn.disabled = true;
                 submitBtn.textContent = '送出中...';
-
                 const spRequirements = [];
                 const requirementNodes = container.querySelectorAll('.p-4');
                 let hasEmptyFields = false;
@@ -419,16 +135,14 @@
                     const gender = node.querySelector('.sp-gender').value;
                     const age = node.querySelector('.sp-age').value;
                     const condition = node.querySelector('.sp-condition').value;
-                    if (!gender || !age.trim() || !condition.trim()) {
-                        hasEmptyFields = true;
-                    }
+                    if (!gender || !age.trim() || !condition.trim()) hasEmptyFields = true;
                     spRequirements.push({ gender, age, condition });
                 });
 
                 if (hasEmptyFields) {
                     alert('標病需求的欄位(性別、年齡、條件)皆為必填。');
                     submitBtn.disabled = false;
-                    submitBtn.innerHTML = '送出申請 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>';
+                    submitBtn.textContent = '送出申請';
                     return;
                 }
 
@@ -447,44 +161,74 @@
                         spGender: req.gender,
                         spAgeRange: req.age,
                         spSkill: req.condition,
-                        spCount: 1, spPay: '', spClothing: '', spNotes: ''
                     })),
-                    activityType: '', patientCount: '', caseGender: '', caseAge: '',
-                    caseDescription: '', teacherName: '', teacherEmail: '',
-                    teacherPhone: '', teachingActivity: ''
                 };
                 
-                // 這會呼叫真實的後端 GAS function
                 google.script.run
                     .withSuccessHandler(response => {
                         alert(response.message);
-                        if (response.success) {
-                            form.reset();
-                            container.innerHTML = '';
-                            spCount = 0;
-                            addSpRequirement();
-                            fileNameSpan.textContent = '尚未選擇檔案';
-                        }
+                        if (response.success) form.reset();
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = '送出申請 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>';
+                        submitBtn.textContent = '送出申請';
                     })
                     .withFailureHandler(err => {
-                        alert("送出失敗，請檢查網路連線或聯繫管理員。錯誤訊息: " + err);
+                        alert("送出失敗: " + err);
                         submitBtn.disabled = false;
-                        submitBtn.innerHTML = '送出申請 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7"></path></svg>';
+                        submitBtn.textContent = '送出申請';
                     })
                     .submitApplication(payloadForGas);
             });
-            
-            // 查詢頁面事件監聽
-            yearFilter.addEventListener('change', updateDisplay);
-            searchBtn.addEventListener('click', updateDisplay);
-            searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') updateDisplay(); });
+            // Tab切換邏輯
+            const tabs = document.querySelectorAll('#myTab button');
+            const tabContents = document.querySelectorAll('#myTabContent .tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    tabs.forEach(t => t.classList.remove('text-blue-600', 'border-blue-600'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    this.classList.add('text-blue-600', 'border-blue-600');
+                    document.getElementById(this.getAttribute('aria-controls')).classList.add('active');
+                    if (this.id === 'status-tab') fetchApplications();
+                });
+            });
+            // 查詢功能
+            const searchBtn = document.getElementById('search-btn');
+            const searchInput = document.getElementById('search-input');
+            const statusTableBody = document.getElementById('status-table-body');
+            const loadingOverlay = document.getElementById('loading-overlay');
+            function fetchApplications(){
+                loadingOverlay.classList.remove('hidden');
+                google.script.run
+                    .withSuccessHandler(response => {
+                        if(response.success){
+                            renderStatusTable(response.data);
+                        } else {
+                            alert('查詢失敗：' + response.message);
+                        }
+                        loadingOverlay.classList.add('hidden');
+                    })
+                    .withFailureHandler(err => {
+                        alert('查詢錯誤：' + err);
+                        loadingOverlay.classList.add('hidden');
+                    })
+                    .getApplications({keyword: searchInput.value});
+            }
+            searchBtn.addEventListener('click', fetchApplications);
+            searchInput.addEventListener('keyup', (e) => { if (e.key === 'Enter') fetchApplications(); });
+            function renderStatusTable(data) {
+                statusTableBody.innerHTML = '';
+                if (!data || data.length === 0) {
+                    statusTableBody.innerHTML = `<tr><td colspan="5" class="text-center py-10 text-gray-500">查無資料</td></tr>`;
+                    return;
+                }
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.className = 'bg-white border-b hover:bg-gray-50';
+                    row.innerHTML = `<th scope="row" class="px-6 py-4 font-medium text-gray-900">${item.id}</th><td class="px-6 py-4">${item.unit} - ${item.applicantName}</td><td class="px-6 py-4">${item.activityDate}</td><td class="px-6 py-4"><span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">${item.status}</span></td><td class="px-6 py-4"><a href="#" class="font-medium text-blue-600 hover:underline">詳情</a></td>`;
+                    statusTableBody.appendChild(row);
+                });
+            }
         }
-        
-        // 確保在DOM載入完成後才執行主程式
         document.addEventListener('DOMContentLoaded', initializeAppLogic);
-
     </script>
 </body>
 </html>
